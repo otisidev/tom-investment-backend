@@ -1,0 +1,9 @@
+
+*.lock
+node_modules
+package-lock.json
+.env
+*.log
+.serverless
+.vscode
+lambda

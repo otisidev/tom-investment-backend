@@ -1,0 +1,8 @@
+{
+    "title": "Basic Bot",
+    "amount": 450,
+    "percent": 15,
+    "canReinvestment": false,
+    "daysToPayout": 7,
+    "weeklyPayoutInterval": 1
+}

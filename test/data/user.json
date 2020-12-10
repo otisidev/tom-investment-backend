@@ -1,0 +1,13 @@
+{
+    "firstname": "Test",
+    "lastname": "User",
+    "email": "bogapal577@votavk.com",
+    "phone": "08020000024",
+    "password": "some$password",
+    "walletAddress": "3NnXYNSQaWri23yx8inGXgUHRpGZL6urQi",
+    "address": "Some contact address",
+    "gender": "Rather no say",
+    "nationality": "Some Country",
+    "dob": "1980-07-07T07:00:29.858Z",
+    "image": "https://cdn.dribbble.com/users/2364329/screenshots/10481283/media/f013d5235bfcf1753d56cad154f11a67.jpg"
+}

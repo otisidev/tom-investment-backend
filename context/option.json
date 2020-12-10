@@ -1,0 +1,13 @@
+{
+    "option": {
+        "useNewUrlParser": true,
+        "useCreateIndex": true,
+        "retryWrites": true,
+        "w": "majority",
+        "useFindAndModify": false,
+        "useUnifiedTopology": true
+    },
+    "app": {
+        "port": 8800
+    }
+}
