@@ -26,4 +26,4 @@ CategorySchema.virtual("id").get(function () {
     return this._id;
 });
 // public member
-exports.CategoryFModel = model("Category", CategorySchema);
+exports.CategoryModel = model("Category", CategorySchema);
