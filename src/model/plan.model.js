@@ -37,6 +37,12 @@ const PlanSchema = new Schema(
             type: Number,
             required: true,
         },
+        category: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "Category",
+            trim: true,
+        },
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
