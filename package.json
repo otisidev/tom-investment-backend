@@ -1,7 +1,7 @@
 {
     "name": "investment-backend",
     "version": "1.0.0",
-    "description": "Investment bot for ifeanyi urama",
+    "description": "Tom Investment bot for ifeanyi urama",
     "main": "src/server.js",
     "directories": {
         "lib": "lib",
