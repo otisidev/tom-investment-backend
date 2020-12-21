@@ -12,14 +12,14 @@ class PlanService {
      */
     static async CreatePlan(model) {
         try {
-            const { title, amount, percent, daysToPayout } = model;
-            if (title && amount && percent && daysToPayout) {
+            const { title, amount, percent } = model;
+            if (title && amount && percent) {
                 const op = await new Model(model).save();
                 if (op) {
                     return {
                         status: 200,
                         message: "Completed!",
-                        doc: op,
+                        doc: op
                     };
                 }
             }
@@ -44,20 +44,18 @@ class PlanService {
                         title: model.title,
                         amount: model.amount,
                         percent: model.percent,
-                        daysToPayout: model.daysToPayout,
-                        weeklyPayoutInterval: model.weeklyPayoutInterval,
                         canReinvestment: model.canReinvestment,
-                        maxAmount: model.maxAmount,
-                    },
+                        maxAmount: model.maxAmount
+                    }
                 };
                 const op = await Model.findOneAndUpdate(query, update, {
-                    new: true,
+                    new: true
                 }).exec();
                 if (op) {
                     return {
                         status: 200,
                         message: "Completed!",
-                        doc: op,
+                        doc: op
                     };
                 }
             }
@@ -81,7 +79,7 @@ class PlanService {
                     return {
                         status: 200,
                         message: "Completed!",
-                        doc: { id: plan, status: "Deleted" },
+                        doc: { id: plan, status: "Deleted" }
                     };
                 }
             }
@@ -94,16 +92,19 @@ class PlanService {
     /**
      * Retrieves a list of all the plans
      */
-    static async GetPlans() {
-        const query = { removed: false };
-        const op = await Model.find(query).sort({ percent: 1 }).exec();
-        if (op) {
-            return {
-                status: 200,
-                message: "Completed!",
-                docs: op,
-            };
+    static async GetPlans(category) {
+        if (isValid(category)) {
+            const query = { removed: false, category };
+            const op = await Model.find(query).sort({ amount: 1 }).exec();
+            if (op) {
+                return {
+                    status: 200,
+                    message: "Completed!",
+                    docs: op
+                };
+            }
         }
+        throw new Error("plan not found!");
     }
     /**
      * Gets a single plan
@@ -117,7 +118,7 @@ class PlanService {
                 return {
                     status: 200,
                     message: "Completed!",
-                    doc: op,
+                    doc: op
                 };
             }
         }
@@ -134,13 +135,13 @@ class PlanService {
             const q = { removed: false, _id: id };
             const update = { $set: { canReinvestment: state } };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "Plan updated successfully!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("Investment plan not found!");

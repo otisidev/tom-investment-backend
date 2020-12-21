@@ -6,7 +6,14 @@ const typeDefs = gql`
         GetUserInvestments(" Page number" page: Int, "maximum record per request" limit: Int): InvestmentListResponse!
         "Gets a list of Investment for approval"
         GetInvestmentsForApproval(" Page number" page: Int, "maximum record per request" limit: Int): InvestmentListResponse!
-        GetPayableInvestments("Page number" page: Int, "Maximum record per request" limit: Int, "User email address or phone" user: String): InvestmentListResponse!
+        GetPayableInvestments(
+            "Page number"
+            page: Int
+            "Maximum record per request"
+            limit: Int
+            "User email address or phone"
+            user: String
+        ): InvestmentListResponse!
         "Count all investment of a user"
         CountInvestment: Int!
         "Count all user's approved investment"
@@ -18,9 +25,23 @@ const typeDefs = gql`
         "Count Sum of the investment made"
         SumInvestmentMade: Int!
         "Get investment histories"
-        GetInvestmentHistory("Investment id" id: ID!, "page number" page: Int!, "maximum record per request" limit: Int!): InvestmentHistoryList!
+        GetInvestmentHistory(
+            "Investment id"
+            id: ID!
+            "page number"
+            page: Int!
+            "maximum record per request"
+            limit: Int!
+        ): InvestmentHistoryList!
 
-        GetActiveInvestment("Page number" page: Int, "Maximum record per request" limit: Int, "User email address or phone" user: String): InvestmentListResponse!
+        GetActiveInvestment(
+            "Page number"
+            page: Int
+            "Maximum record per request"
+            limit: Int
+            "User email address or phone"
+            user: String
+        ): InvestmentListResponse!
     }
 
     extend type Mutation {
@@ -74,6 +95,10 @@ const typeDefs = gql`
         plan: ID!
         "Amount invested"
         investmentMade: Int!
+        "Total day to payout"
+        daysToPayout: Int!
+        "Weekly payout interval"
+        weeklyPayoutInterval: Int!
     }
     "New Investment Object Template"
     input NewInvestmentInput {
@@ -90,6 +115,10 @@ const typeDefs = gql`
         "Investment approval status"
         approved: Boolean!
         nextFund: String!
+        "Total day to payout"
+        daysToPayout: Int!
+        "Weekly payout interval"
+        weeklyPayoutInterval: Int!
     }
 
     type SingleInvestmentResponse {
@@ -159,6 +188,11 @@ const typeDefs = gql`
         last_fund_date: String
         compounded: InvestmentCompound
         walletAddress: String
+
+        "Days to payout"
+        days_to_payout: Int!
+        "Weekly payout interval"
+        weekly_payout_interval: Int!
     }
 
     type InvestmentCompound {

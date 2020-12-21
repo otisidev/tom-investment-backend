@@ -117,28 +117,34 @@ exports.ContactPersonService = class ContactPersonService {
         return BatchDataLoader(ids, result);
     }
 
-    static async UpdateContact(id, update) {
-        if (isValid(id) && update) {
-            const q = { removed: false, _id: id };
-            const _update = {
-                $set: {
-                    name: model.name,
-                    email: model.email,
-                    phone: model.phone,
-                    position: model.position,
-                    image: model.image
-                }
-            };
-            const cb = await Model.findOneAndUpdate(q, update, {
-                new: true
-            }).exec();
-            if (cb)
-                return {
-                    status: 200,
-                    message: "Contact person updated successfully!",
-                    doc: cb
+    static async UpdateContact(id, model) {
+        try {
+            if (isValid(id) && model) {
+                const q = { removed: false, _id: id };
+                const _update = {
+                    $set: {
+                        name: model.name,
+                        email: model.email,
+                        phone: model.phone,
+                        position: model.position,
+                        image: model.image
+                    }
                 };
+                const cb = await Model.findOneAndUpdate(q, _update, {
+                    new: true
+                }).exec();
+                if (cb)
+                    return {
+                        status: 200,
+                        message: "Contact person updated successfully!",
+                        doc: cb
+                    };
+            }
+            throw new Error("Failed! Contact person not found.");
+        } catch (error) {
+           if (error.message.startsWith("E11000 duplicate key error collection:"))
+               throw new Error("Bad data! Contact person already exists.");
+           throw error; 
         }
-        throw new Error("Failed! Contact person not found.");
     }
 };

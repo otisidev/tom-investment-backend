@@ -41,6 +41,10 @@ const typeDefs = gql`
         "Date of creation"
         created_at: String!
     }
+
+    extend type Plan {
+        category: Category!
+    }
 `;
 
 exports.typeDefs = typeDefs;

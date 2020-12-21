@@ -619,7 +619,7 @@ function confirmationTemplate(ref, name, email, base_url) {
 <!--<![endif]-->
 <div align="center" class="img-container center fixedwidth" style="padding-right: 10px;padding-left: 10px;">
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr style="line-height:0px"><td style="padding-right: 10px;padding-left: 10px;" align="center"><![endif]-->
-<div style="font-size:1px;line-height:10px"> </div><img align="center" alt="jp investments" border="0" class="center fixedwidth" src="https://jpinvestmentservices.com/assets/images/logo/logo-dark.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 128px; display: block;" title="Jp investment services" width="128"/>
+<div style="font-size:1px;line-height:10px"> </div><img align="center" alt="${APP_NAME}" border="0" class="center fixedwidth" src="${BASE_URL}assets/images/logo/logo-dark.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; width: 100%; max-width: 128px; display: block;" title="${APP_NAME}" width="128"/>
 <div style="font-size:1px;line-height:15px"> </div>
 <!--[if mso]></td></tr></table><![endif]-->
 </div>

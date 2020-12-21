@@ -5,15 +5,15 @@ const InvestmentScheme = new Schema(
     {
         investmentMade: {
             type: Number,
-            required: true,
+            required: true
         },
         currentBalance: {
             type: Number,
-            default: 0.0,
+            default: 0.0
         },
         removed: {
             type: Boolean,
-            default: false,
+            default: false
         },
         nextFund: { type: Date, default: null },
         lastFund: { type: Date, default: null },
@@ -21,16 +21,16 @@ const InvestmentScheme = new Schema(
         user: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: true
         },
         plan: {
             type: Schema.Types.ObjectId,
             ref: "Plan",
-            required: true,
+            required: true
         },
         closed: {
             type: Boolean,
-            default: false,
+            default: false
         },
         approved: { type: Boolean, default: false },
         declined: { type: Boolean, default: false },
@@ -38,18 +38,26 @@ const InvestmentScheme = new Schema(
         compounded: {
             status: {
                 type: Boolean,
-                default: false,
+                default: false
             },
             payoutDate: {
-                type: Date,
+                type: Date
             },
             payout: {
-                type: String,
-            },
+                type: String
+            }
         },
         walletAddress: {
-            type: String,
+            type: String
         },
+        daysToPayout: {
+            type: Number,
+            required: true
+        },
+        weeklyPayoutInterval: {
+            type: Number,
+            required: true
+        }
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

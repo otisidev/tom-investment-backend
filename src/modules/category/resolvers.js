@@ -43,6 +43,9 @@ const resolvers = {
     },
     Category: {
         created_at: ({ created_at }) => new Date(created_at).toISOString()
+    },
+    Plan: {
+        category: async ({ category }, _, { dataSources }) => await dataSources.loaders.categoryLoader.load(category.toString())
     }
 };
 

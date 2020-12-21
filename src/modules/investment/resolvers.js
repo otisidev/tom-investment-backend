@@ -72,19 +72,20 @@ const resolvers = {
                 return result;
             }
             return new AuthenticationError("Unauthorized access!");
-        },
+        }
     },
     Mutation: {
         NewInvestment: async (_, { model }, { user }) => {
             if (user) {
                 const userRes = await UserService.GetSingleUser(user.id);
-                if (!userRes.doc.image) return new ApolloError("Bad data! You can not create an investment without updating your profile picture.", 400);
+                if (!userRes.doc.image)
+                    return new ApolloError("Bad data! You can not create an investment without updating your profile picture.", 400);
                 // const next = await NextOfKinService.HasNextOfKin(user.id);
                 // if (!next) return new ApolloError("Bad data! You cannot create an investment without a next of kin information.");
                 // new investment
                 const result = await InvestmentService.NewInvestment({
                     ...model,
-                    user: user.id,
+                    user: user.id
                 });
                 await UserService.UpdateInvestment(user.id, result.doc.id);
                 // Updated Email
@@ -126,7 +127,7 @@ const resolvers = {
                             amount,
                             referrer: referrer.id,
                             user: _user._id,
-                            investment: id,
+                            investment: id
                         });
                     }
                 }
@@ -171,7 +172,7 @@ const resolvers = {
                             amount,
                             referrer: referrer.id,
                             user: model.user,
-                            investment: result.doc.id,
+                            investment: result.doc.id
                         });
                     }
                 }
@@ -187,8 +188,8 @@ const resolvers = {
                 // const paymentState = await helpers.makeTransaction(to, btc);
 
                 // if (paymentState) {
-                const { investmentMade, plan } = investment.doc;
-                const { daysToPayout, weeklyPayoutInterval, percent } = plan;
+                const { investmentMade, daysToPayout, weeklyPayoutInterval, plan } = investment.doc;
+                const { percent } = plan;
                 // try {
                 // get amount to payout
                 const amount = calculatePayout(investmentMade, percent) * weeklyPayoutInterval;
@@ -205,7 +206,7 @@ const resolvers = {
                 await InvestmentHistoryService.LogInvestment({
                     investment: id,
                     amount: amount,
-                    reason: "Payout",
+                    reason: "Payout"
                 });
 
                 const message = `New investment payout. <br/>
@@ -274,14 +275,17 @@ const resolvers = {
                 }
             }
             return new AuthenticationError("Unauthorized access!");
-        },
+        }
     },
     Investment: {
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
         investment_made: ({ investmentMade }) => investmentMade,
         date: ({ date }) => new Date(date).toISOString(),
+        days_to_payout: ({ daysToPayout }) => daysToPayout,
+        weekly_payout_interval: ({ weeklyPayoutInterval }) => weeklyPayoutInterval,
         balance: ({ currentBalance }) => currentBalance,
-        payout_sum: ({ investmentMade, plan }) => calculatePayout(investmentMade, plan.percent) * plan.weeklyPayoutInterval,
+        payout_sum: ({ investmentMade, weeklyPayoutInterval }) =>
+            calculatePayout(investmentMade, weeklyPayoutInterval) * weeklyPayoutInterval,
         payout_weekly: ({ investmentMade, plan }) => calculatePayout(investmentMade, plan.percent),
         next_fund_date: ({ nextFund }) => {
             if (nextFund) return new Date(nextFund).toISOString();
@@ -290,17 +294,17 @@ const resolvers = {
         last_fund_date: ({ lastFund }) => {
             if (lastFund) return new Date(lastFund).toISOString();
             return null;
-        },
+        }
     },
     InvestmentHistory: {
-        date: ({ date }) => new Date(date).toISOString(),
+        date: ({ date }) => new Date(date).toISOString()
     },
     InvestmentCompound: {
         payoutDate: ({ payoutDate }) => {
             if (payoutDate) return new Date(payoutDate).toISOString();
             return null;
-        },
-    },
+        }
+    }
 };
 
 exports.resolvers = resolvers;

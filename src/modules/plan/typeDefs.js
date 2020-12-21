@@ -3,7 +3,7 @@ const { gql } = require("apollo-server");
 const typeDefs = gql`
     extend type Query {
         "Gets a list of Plan"
-        GetPlans: PlanListResponse!
+        GetPlans("Category id" category: ID!): PlanListResponse!
     }
 
     extend type Mutation {
@@ -12,7 +12,7 @@ const typeDefs = gql`
         "Deletes a single plan object"
         DeletePlan("plan's id" id: ID!): DeletedResponse!
         "Update plan"
-        UpdatePlan(id: ID!, update: PlanInput!): SinglePlanResponse!
+        UpdatePlan(id: ID!, update: PlanUpdateInput!): SinglePlanResponse!
     }
     type DeletedResponse {
         message: String!
@@ -37,10 +37,22 @@ const typeDefs = gql`
         percent: Int!
         "Is the plan re-investable"
         canReinvestment: Boolean
-        "Total day to payout"
-        daysToPayout: Int!
-        "Weekly payout interval"
-        weeklyPayoutInterval: Int!
+
+        "Category id"
+        category: ID!
+    }
+    "Option identity template"
+    input PlanUpdateInput {
+        "plan title"
+        title: String!
+        "Plan's minimum Amount"
+        amount: String!
+        "Maximum amount"
+        maxAmount: String!
+        "percent"
+        percent: Int!
+        "Is the plan re-investable"
+        canReinvestment: Boolean
     }
 
     type SinglePlanResponse {
@@ -76,10 +88,6 @@ const typeDefs = gql`
         amount: Int!
         "maximum amount"
         max_amount: Int!
-        "Days to payout"
-        days_to_payout: Int!
-        "Weekly payout interval"
-        weekly_payout_interval: Int!
     }
 `;
 

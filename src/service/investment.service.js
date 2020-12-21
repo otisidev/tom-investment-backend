@@ -18,12 +18,12 @@ exports.InvestmentService = class InvestmentService {
                 if (op) {
                     await Model.populate(op, [
                         { path: "plan", model: "Plan" },
-                        { path: "user", model: "User" },
+                        { path: "user", model: "User" }
                     ]);
                     return {
                         status: 200,
                         message: "Completed!",
-                        doc: op,
+                        doc: op
                     };
                 }
             }
@@ -46,11 +46,11 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 declined: false,
                 approved: false,
-                paid: true,
+                paid: true
             };
             const update = { $set: { approved: true, nextFund } };
             const op = await Model.findOneAndUpdate(query, update, {
-                new: true,
+                new: true
             })
                 .populate(["plan", "user"])
                 .exec();
@@ -58,7 +58,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Investment Approved!",
-                    doc: op,
+                    doc: op
                 };
         }
         throw new Error("Investment not found!");
@@ -76,11 +76,11 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 declined: false,
                 approved: false,
-                paid: false,
+                paid: false
             };
             const update = { $set: { paid: true, walletAddress: wallet } };
             const op = await Model.findOneAndUpdate(query, update, {
-                new: true,
+                new: true
             })
                 .populate(["plan", "user"])
                 .exec();
@@ -88,7 +88,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Investment Payment Confirmed Successfully!",
-                    doc: op,
+                    doc: op
                 };
         }
         throw new Error("Investment or wallet address not found!");
@@ -106,17 +106,17 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 declined: false,
                 approved: false,
-                paid: true,
+                paid: true
             };
             const update = { $set: { declined: true } };
             const op = await Model.findOneAndUpdate(query, update, {
-                new: true,
+                new: true
             }).exec();
             if (op)
                 return {
                     status: 200,
                     message: "Investment Declined!",
-                    doc: op,
+                    doc: op
                 };
         }
         throw new Error("Investment not found!");
@@ -135,12 +135,12 @@ exports.InvestmentService = class InvestmentService {
                 page,
                 limit,
                 sort: { created_at: -1, approved: 1 },
-                populate: ["plan", "user"],
+                populate: ["plan", "user"]
             });
             return {
                 status: 200,
                 message: "Completed!",
-                ...op,
+                ...op
             };
         }
         throw new Error("Investment not found!");
@@ -160,7 +160,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Investment closed successfully!",
-                    doc: { id: investment, status: "Closed!" },
+                    doc: { id: investment, status: "Closed!" }
                 };
             }
         }
@@ -181,7 +181,7 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 paid: true,
                 approved: true,
-                _id: id,
+                _id: id
             };
             const investment = await this.GetSingle(id);
             const dueDate = new Date(investment.doc.nextFund);
@@ -191,10 +191,10 @@ exports.InvestmentService = class InvestmentService {
             const update = {
                 $set: { nextFund: dueDate },
                 $inc: { investmentMade: payout },
-                $currentDate: { lastFund: true },
+                $currentDate: { lastFund: true }
             };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             })
                 .populate(["plan", "user"])
                 .exec();
@@ -202,7 +202,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Operation completed successfully",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("Bad data! Investment not valid.");
@@ -221,15 +221,15 @@ exports.InvestmentService = class InvestmentService {
                 approved: true,
                 closed: false,
                 declined: false,
-                _id: investment,
+                _id: investment
             };
             const update = {
                 $set: { nextFund },
                 $inc: { currentBalance: amount },
-                $currentDate: { lastFund: true },
+                $currentDate: { lastFund: true }
             };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             })
                 .populate(["plan", "user"])
                 .exec();
@@ -238,7 +238,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Completed successfully!",
-                    doc: cb,
+                    doc: cb
                 };
             }
         }
@@ -253,7 +253,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     status: 200,
                     message: "Found!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("Investment not found!");
@@ -274,7 +274,7 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 approved: true,
                 declined: false,
-                nextFund: { $lte: current },
+                nextFund: { $lte: current }
             };
             if (user) {
                 q.user = { $in: user };
@@ -283,13 +283,13 @@ exports.InvestmentService = class InvestmentService {
                 page,
                 limit,
                 sort: { nextFund: -1 },
-                populate: ["plan", "user"],
+                populate: ["plan", "user"]
             };
             const cb = await Model.paginate(q, opt);
             return {
                 ...cb,
                 status: 200,
-                message: "Completed!",
+                message: "Completed!"
             };
         } else {
             throw new Error("Investment payout is only on Mondays!");
@@ -302,21 +302,21 @@ exports.InvestmentService = class InvestmentService {
             closed: false,
             paid: true,
             approved: false,
-            declined: false,
+            declined: false
         };
         const option = {
             page,
             limit,
             sort: {
-                created_at: -1,
+                created_at: -1
             },
-            populate: ["plan", "user"],
+            populate: ["plan", "user"]
         };
         const cb = await Model.paginate(q, option);
         return {
             ...cb,
             status: 200,
-            message: "Completed",
+            message: "Completed"
         };
     }
 
@@ -327,7 +327,7 @@ exports.InvestmentService = class InvestmentService {
                 closed: false,
                 paid: true,
                 approved: true,
-                user,
+                user
             };
             const count = await Model.countDocuments(q).exec();
             return count === 1;
@@ -358,7 +358,7 @@ exports.InvestmentService = class InvestmentService {
                 removed: false,
                 closed: false,
                 user,
-                approved: true,
+                approved: true
             };
             return await Model.countDocuments(q).exec();
         }
@@ -370,7 +370,7 @@ exports.InvestmentService = class InvestmentService {
             closed: false,
             approved: false,
             declined: false,
-            paid: true,
+            paid: true
         };
         return await Model.countDocuments(q).exec();
     }
@@ -381,7 +381,7 @@ exports.InvestmentService = class InvestmentService {
             closed: false,
             approved: true,
             declined: false,
-            paid: true,
+            paid: true
         };
         return await Model.countDocuments(q).exec();
     }
@@ -394,7 +394,7 @@ exports.InvestmentService = class InvestmentService {
             closed: false,
             approved: true,
             paid: true,
-            user,
+            user
         };
         const cb = await Model.find(q).select("investmentMade").exec();
         if (cb.length) {
@@ -416,7 +416,7 @@ exports.InvestmentService = class InvestmentService {
             closed: false,
             approved: true,
             declined: false,
-            paid: true,
+            paid: true
         };
         if (user) {
             q.user = { $in: user };
@@ -427,16 +427,16 @@ exports.InvestmentService = class InvestmentService {
             limit,
             sort: {
                 nextFund: -1,
-                created_at: -1,
+                created_at: -1
             },
-            populate: ["plan", "user"],
+            populate: ["plan", "user"]
         };
         // execution
         const cb = await Model.paginate(q, opt);
         return {
             ...cb,
             status: 200,
-            message: "Completed!",
+            message: "Completed!"
         };
     }
 
@@ -455,15 +455,15 @@ exports.InvestmentService = class InvestmentService {
                     "compounded.status": true,
                     "compounded.payoutDate": nextDate,
                     "compounded.payout": payout,
-                    nextFund: nextDate,
-                },
+                    nextFund: nextDate
+                }
             };
             const result = await Model.findOneAndUpdate(_query, _update, { new: true }).exec();
             if (result)
                 return {
                     status: 200,
                     message: "Operation completed successfully!",
-                    doc: result,
+                    doc: result
                 };
         }
         throw new Error("Investment not found!");
@@ -478,7 +478,7 @@ exports.InvestmentService = class InvestmentService {
                 return {
                     message: "Completed!",
                     status: 200,
-                    doc: result,
+                    doc: result
                 };
         }
     }
@@ -497,22 +497,22 @@ exports.InvestmentService = class InvestmentService {
             {
                 $match: {
                     closed: false,
-                    removed: false,
-                },
+                    removed: false
+                }
             },
             {
                 $group: {
                     _id: "$user",
-                    ids: { $push: "$_id" },
-                },
+                    ids: { $push: "$_id" }
+                }
             },
             {
                 $project: {
                     user: "$_id",
                     investments: "$ids",
-                    _id: 0,
-                },
-            },
+                    _id: 0
+                }
+            }
         ];
         return await Model.aggregate(pipeline).exec();
     }

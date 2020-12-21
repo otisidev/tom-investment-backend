@@ -29,14 +29,7 @@ const PlanSchema = new Schema(
             type: Boolean,
             default: false,
         },
-        daysToPayout: {
-            type: Number,
-            required: true,
-        },
-        weeklyPayoutInterval: {
-            type: Number,
-            required: true,
-        },
+       
         category: {
             type: Schema.Types.ObjectId,
             required: true,
