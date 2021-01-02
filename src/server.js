@@ -10,7 +10,7 @@ const server = new ApolloServer({
         helpers,
         loaders
     }),
-    context: async ({ req: event }) => {
+    context: async ({ event }) => {
         let cb = {
             userAgent: event.headers["user-agent"],
             ip: ""
