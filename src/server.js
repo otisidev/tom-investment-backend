@@ -1,5 +1,5 @@
 const { connect } = require("../context");
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer } = require("apollo-server-lambda");
 const { helpers, loaders } = require("./service/root.service");
 const { verify } = require("jsonwebtoken");
 
@@ -45,25 +45,25 @@ const server = new ApolloServer({
 // connect to database
 connect()
     .then(
-        // {}
-        (status) =>
-            status &&
-            server
-                .listen(4400)
-                .then(({ url }) => console.log(` Application running @ ${url}`))
-                .catch((err) => {
-                    console.error(JSON.stringify(err, null, 5));
-                    process.exit(1);
-                })
+        () => {}
+        // (status) =>
+        //     status &&
+        //     server
+        //         .listen(4400)
+        //         .then(({ url }) => console.log(` Application running @ ${url}`))
+        //         .catch((err) => {
+        //             console.error(JSON.stringify(err, null, 5));
+        //             process.exit(1);
+        // )
     )
     .catch((err) => {
         console.log(err);
         process.exit(1);
     });
 
-// module.exports.handler = server.createHandler({
-//     cors: {
-//         origin: "*",
-//         credentials: true
-//     }
-// });
+module.exports.handler = server.createHandler({
+    cors: {
+        origin: "*",
+        credentials: true
+    }
+});
