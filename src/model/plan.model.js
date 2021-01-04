@@ -6,7 +6,6 @@ const PlanSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            unique: true,
         },
         amount: {
             type: Number,
@@ -42,5 +41,7 @@ const PlanSchema = new Schema(
 PlanSchema.virtual("id").get(function () {
     return this._id;
 });
+
+// PlanSchema.index("",)
 // public member
 exports.PlanModel = model("Plan", PlanSchema);
