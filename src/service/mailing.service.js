@@ -7,11 +7,13 @@ const { USER, USER_PWD, BASE_URL, APP_NAME } = process.env;
 
 // mailing option
 const mailingOption = {
-    service: "gmail",
+    host: "smtp.zoho.com",
+    secure: true,
+    port: 465,
     auth: {
         user: USER,
-        pass: USER_PWD,
-    },
+        pass: USER_PWD
+    }
 };
 
 class MailService {
@@ -27,13 +29,13 @@ class MailService {
             from: `${APP_NAME} <${USER}>`,
             to: email,
             subject: `[${APP_NAME}] Account Confirmation`,
-            html: confirmationTemplate(ref, name, email, BASE_URL),
+            html: confirmationTemplate(ref, name, email, BASE_URL)
         };
         const cb = await transport.sendMail(option);
         if (cb.accepted)
             return {
                 status: 200,
-                message: `Check ${email} to confirm your account.`,
+                message: `Check ${email} to confirm your account.`
             };
         throw new Error("Email not sent!");
     }
@@ -50,13 +52,13 @@ class MailService {
             to: email,
             from: `${APP_NAME} <${USER}>`,
             html: emailTemplate(body),
-            subject: subject,
+            subject: subject
         };
         const res = await transport.sendMail(opt);
         if (res.accepted)
             return {
                 status: 200,
-                message: `Email sent to ${email} successfully`,
+                message: `Email sent to ${email} successfully`
             };
         throw new Error("Email not sent!");
     }
@@ -74,13 +76,13 @@ class MailService {
             from: `${APP_NAME} <${USER}>`,
             to: email,
             subject: `[${APP_NAME}] Password Reset`,
-            html: resetTemplate(ref, email, name, BASE_URL, code),
+            html: resetTemplate(ref, email, name, BASE_URL, code)
         };
         const cb = await transport.sendMail(option);
         if (cb.accepted)
             return {
                 status: 200,
-                message: `An email has been sent to ${email}! follow the link to set a new password.`,
+                message: `An email has been sent to ${email}! follow the link to set a new password.`
             };
 
         throw new Error("Email not sent!");
@@ -1169,5 +1171,5 @@ function emailTemplate(body) {
 }
 
 module.exports = {
-    mailing: MailService,
+    mailing: MailService
 };
