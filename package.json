@@ -1,5 +1,5 @@
 {
-    "name": "patrick-backend",
+    "name": "tom-investment-backend",
     "version": "1.0.0",
     "description": "patrick Investment bot for ifeanyi urama",
     "main": "src/server.js",
