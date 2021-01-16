@@ -4,21 +4,21 @@ const { ContactPersonService } = require("../../service/contact.service");
 const resolvers = {
     Query: {
         GetContactPersons: async (_, { category }, { user }) => {
-            if (user && user.isAdmin) {
+            if (user) {
                 const res = await ContactPersonService.GetContactPersons(category);
                 return res;
             }
             return new AuthenticationError("Unauthorized access!");
         },
         GetContactPerson: async (_, { id }, { user }) => {
-            if (user && user.isAdmin) {
+            if (user) {
                 const res = await ContactPersonService.GetContactPerson(id);
                 return res;
             }
             return new AuthenticationError("Unauthorized access!");
         },
         GetContactPersonGroupedBy: async (_, __, { user }) => {
-            if (user && user.isAdmin) {
+            if (user) {
                 const res = await ContactPersonService.GetContactPersonsGroupByCategory();
                 return res;
             }
