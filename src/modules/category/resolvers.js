@@ -4,14 +4,14 @@ const { CategoryService } = require("../../service/category.service");
 const resolvers = {
     Query: {
         GetCategory: async (_, { id }, { user }) => {
-            if (user && user.isAdmin) {
+            if (user) {
                 const res = await CategoryService.GetCategory(id);
                 return res;
             }
             return new AuthenticationError("Unauthorized access!");
         },
         GetCategories: async (_, __, { user }) => {
-            if (user && user.isAdmin) {
+            if (user ) {
                 const res = await CategoryService.GetCategories();
                 return res;
             }
