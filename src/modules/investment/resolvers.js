@@ -77,9 +77,9 @@ const resolvers = {
     Mutation: {
         NewInvestment: async (_, { model }, { user }) => {
             if (user) {
-                const userRes = await UserService.GetSingleUser(user.id);
-                if (!userRes.doc.image)
-                    return new ApolloError("Bad data! You can not create an investment without updating your profile picture.", 400);
+                // const userRes = await UserService.GetSingleUser(user.id);
+                // if (!userRes.doc.image)
+                //     return new ApolloError("Bad data! You can not create an investment without updating your profile picture.", 400);
                 // const next = await NextOfKinService.HasNextOfKin(user.id);
                 // if (!next) return new ApolloError("Bad data! You cannot create an investment without a next of kin information.");
                 // new investment
