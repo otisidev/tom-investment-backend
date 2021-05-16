@@ -514,8 +514,7 @@ exports.InvestmentService = class InvestmentService {
     static async TopUp(id, amount, plan = null) {
         if (isValid(id) && amount) {
             const q = { removed: false, closed: false, _id: id };
-            let update = { $inc: { investmentMade: amount } };
-            if (plan) update.$set = { plan };
+            let update = { $inc: { investmentMade: amount }, $set: { plan } };
             const result = await Model.findOneAndUpdate(q, update).exec();
             if (result) return true;
         }
