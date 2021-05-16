@@ -186,8 +186,7 @@ exports.InvestmentService = class InvestmentService {
             // update statement
             const update = {
                 $set: { nextFund: dueDate, currentBalance: 0 },
-                $inc: { investmentMade: amount },
-                $currentDate: { lastFund: true }
+                $inc: { investmentMade: amount }
             };
             const cb = await Model.findOneAndUpdate(q, update, {
                 new: true
