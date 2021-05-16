@@ -41,7 +41,7 @@ class TopUpInvestmentService {
     static async GetInvestmentTopUp(investment) {
         if (isValid(investment)) {
             const q = { removed: false, investment };
-            const res = await Model.find(q).exec();
+            const res = await Model.find(q).sort({ created_at: -1 }).exec();
             return { docs: res, message: "Completed", status: 200 };
         }
         throw new Error("Unknown investment object!");
