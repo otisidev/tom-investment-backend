@@ -45,7 +45,10 @@ const resolvers = {
         created_at: ({ created_at }) => new Date(created_at).toISOString()
     },
     Investment: {
-        currency: async ({ currency }, _, { dataSources }) => await dataSources.loaders.currencyLoader.load(currency.toString())
+        currency: async ({ currency }, _, { dataSources }) => {
+            if (currency) return await dataSources.loaders.currencyLoader.load(currency.toString());
+            return null;
+        }
     }
 };
 
