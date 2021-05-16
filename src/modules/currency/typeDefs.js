@@ -43,7 +43,7 @@ const typeDefs = gql`
     }
 
     extend type Investment {
-        currency: Currency!
+        currency: Currency
     }
 `;
 
