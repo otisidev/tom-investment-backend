@@ -19,7 +19,7 @@ const typeDefs = gql`
     type TopUpListResponse {
         status: Int!
         message: String!
-        docs: InvestmentTopUp!
+        docs: [InvestmentTopUp!]
     }
 
     type TopUpPaginatedListResponse {
