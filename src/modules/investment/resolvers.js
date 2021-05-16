@@ -5,6 +5,7 @@ const { InvestmentHistoryService } = require("../../service/investment-log.servi
 const { mailing } = require("../../service/mailing.service");
 const { ReferrerService } = require("../../service/referrer.service");
 const { calculatePayout } = require("../../../lib/percent");
+const moment = require("moment");
 // const { NextOfKinService } = require("../../service/kin.service");
 
 const resolvers = {
@@ -231,17 +232,18 @@ const resolvers = {
             }
             return new AuthenticationError("Unauthorized access!");
         },
-        Reinvestment: async (_, { id, payout, weeks }, { user }) => {
+        Reinvestment: async (_, { id }, { user }) => {
             if (user) {
                 const investment = await InvestmentService.GetSingle(id);
-                const result = await InvestmentService.Reinvest(id, payout, weeks);
+                const due = moment(investment.doc.nextFund).add(7, "days");
+                const result = await InvestmentService.Reinvest(id, investment.doc.currentBalance, due.toDate());
                 const { email } = investment.doc.user;
                 const message = `Reinvestment Notification. <br/>
-					<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(investment.doc.investmentMade)} <br/>
+					<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(result.doc.resultMade)} <br/>
 					<b> Next Payout: </b> Payout are Mondays only. <br/>
-					<b> Plan: </b> ${investment.doc.plan.title} <br/>
+					<b> Plan: </b> ${result.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
-					<b> Next Payout Date: </b> ${new Date(investment.doc.nextFund).toDateString()} 
+					<b> Next Payout Date: </b> ${new Date(result.doc.nextFund).toDateString()} 
 				`;
                 await mailing.SendEmailNotification(email, "Reinvestment Notification!", message);
                 return result;

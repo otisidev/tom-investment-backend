@@ -173,8 +173,8 @@ exports.InvestmentService = class InvestmentService {
      * @param {number} payout total amount to increase the user's investment with
      * @param {number} weeks Number of days to the next fund date
      */
-    static async Reinvest(id, payout, weeks) {
-        if (isValid(id) && payout && weeks) {
+    static async Reinvest(id, amount, dueDate) {
+        if (isValid(id) && amount) {
             // query definition
             const q = {
                 removed: false,
@@ -183,14 +183,10 @@ exports.InvestmentService = class InvestmentService {
                 approved: true,
                 _id: id
             };
-            const investment = await this.GetSingle(id);
-            const dueDate = new Date(investment.doc.nextFund);
-            // New date for payout
-            dueDate.setHours(weeks * 7 * 24);
             // update statement
             const update = {
                 $set: { nextFund: dueDate },
-                $inc: { investmentMade: payout },
+                $inc: { investmentMade: amount },
                 $currentDate: { lastFund: true }
             };
             const cb = await Model.findOneAndUpdate(q, update, {

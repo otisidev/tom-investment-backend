@@ -58,7 +58,7 @@ const typeDefs = gql`
         NewInvestmentByAdmin("New investment complete object" model: NewInvestmentInput!): SingleInvestmentResponse!
         Payout("Investment id" id: ID!, "Amount in bitcoin" btc: String!, "Receiver address" to: String!): SingleInvestmentResponse!
         "Reinvestment"
-        Reinvestment("investment id" id: ID!, "Payout" payout: Int!, "weeks to next payout" weeks: Int!): SingleInvestmentResponse
+        Reinvestment("investment id" id: ID!): SingleInvestmentResponse
         CompoundInvestment("investment id" id: ID!, "Payout" payout: String!, "next fund date" nextFund: String!): SingleInvestmentResponse!
         "Close active investment"
         CloseInvestment("investment id" id: ID!): DeletedResponse!
