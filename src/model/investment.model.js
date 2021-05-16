@@ -57,6 +57,11 @@ const InvestmentScheme = new Schema(
         weeklyPayoutInterval: {
             type: Number,
             required: true
+        },
+        currency: {
+            type: Schema.Types.ObjectId,
+            default: null,
+            ref: "Currency"
         }
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
