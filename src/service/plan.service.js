@@ -157,9 +157,9 @@ class PlanService {
         return BatchDataLoader(ids, result);
     }
 
-    static async GetPlanByAmount(amount) {
+    static async GetPlanByAmount(amount, category) {
         if (amount) {
-            const q = { amount: { $lte: amount }, maxAmount: { $gte: amount } };
+            const q = { amount: { $lte: amount }, maxAmount: { $gte: amount }, category };
             const res = await Model.findOne(q).exec();
             if (res) return res;
         }

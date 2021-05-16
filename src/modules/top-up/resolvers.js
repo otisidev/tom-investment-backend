@@ -33,7 +33,10 @@ const resolvers = {
                 const res = await TopUpInvestmentService.Approve(id);
                 // get new plan
                 const _investment = await InvestmentService.GetSingle(res.doc.investment);
-                const planResult = await PlanService.GetPlanByAmount(Math.round(res.doc.amount + _investment.doc.investmentMade));
+                const planResult = await PlanService.GetPlanByAmount(
+                    Math.round(res.doc.amount + _investment.doc.investmentMade),
+                    _investment.doc.category
+                );
                 if (!planResult) return new ApolloError("investment plan not found!");
                 //update investment
                 await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult._id);
