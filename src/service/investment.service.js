@@ -335,7 +335,7 @@ exports.InvestmentService = class InvestmentService {
      */
     static async GetMany(ids) {
         const q = { _id: { $in: ids } };
-        const result = await Model.find(q).exec();
+        const result = await Model.find(q).populate(["user"]).exec();
         return BatchDataLoader(ids, result);
     }
 
