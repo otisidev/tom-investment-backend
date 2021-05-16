@@ -156,6 +156,15 @@ class PlanService {
         const result = await Model.find(q).exec();
         return BatchDataLoader(ids, result);
     }
+
+    static async GetPlanByAmount(amount) {
+        if (amount) {
+            const q = { amount: { $gte: amount }, maxAmount: { $lte: amount } };
+            const res = await Model.findOne(q).exec();
+            if (res) return res;
+        }
+        return undefined;
+    }
 }
 
 exports.PlanService = PlanService;

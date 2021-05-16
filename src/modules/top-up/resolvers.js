@@ -1,5 +1,7 @@
 const { AuthenticationError } = require("apollo-server");
 const { TopUpInvestmentService } = require("../../service/top-up.service");
+const { PlanService } = require("../../service/plan.service");
+const { InvestmentService } = require("../../service/investment.service");
 
 const resolvers = {
     Query: {
@@ -29,6 +31,10 @@ const resolvers = {
         ApproveTopUp: async (_, { id }, { user }) => {
             if (user && user.isAdmin) {
                 const res = await TopUpInvestmentService.Approve(id);
+                // get new plan
+                const planResult = await PlanService.GetPlanByAmount(res.doc.amount);
+                //update investment
+                await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult?._id);
                 return res;
             }
             return new AuthenticationError("Unauthorized access!");
