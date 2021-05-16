@@ -185,7 +185,7 @@ exports.InvestmentService = class InvestmentService {
             };
             // update statement
             const update = {
-                $set: { nextFund: dueDate },
+                $set: { nextFund: dueDate, currentBalance: 0 },
                 $inc: { investmentMade: amount },
                 $currentDate: { lastFund: true }
             };
