@@ -42,6 +42,7 @@ const typeDefs = gql`
             "User email address or phone"
             user: String
         ): InvestmentListResponse!
+        GetInvestment(Id: ID!): SingleInvestmentResponse
     }
 
     extend type Mutation {

@@ -72,6 +72,13 @@ const resolvers = {
                 return result;
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        GetInvestment: async (_, { id }, { user }) => {
+            if (user) {
+                const res = await InvestmentService.GetSingle(id);
+                return res;
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     Mutation: {
