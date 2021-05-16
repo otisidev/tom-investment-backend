@@ -100,6 +100,7 @@ const typeDefs = gql`
         daysToPayout: Int!
         "Weekly payout interval"
         weeklyPayoutInterval: Int!
+        currency: ID!
     }
     "New Investment Object Template"
     input NewInvestmentInput {
