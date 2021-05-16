@@ -159,7 +159,7 @@ class PlanService {
 
     static async GetPlanByAmount(amount) {
         if (amount) {
-            const q = { amount: { $gte: amount }, maxAmount: { $lte: amount } };
+            const q = { amount: { $lte: amount }, maxAmount: { $gte: amount } };
             const res = await Model.findOne(q).exec();
             if (res) return res;
         }
