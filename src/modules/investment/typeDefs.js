@@ -63,6 +63,14 @@ const typeDefs = gql`
         "Close active investment"
         CloseInvestment("investment id" id: ID!): DeletedResponse!
         FixInvestment: String!
+        "Credit user's investment"
+        CreditInvestment(model: InvestmentLogInput!): SingleInvestmentResponse!
+    }
+
+    input InvestmentLogInput {
+        investment: ID!
+        amount: Int!
+        reason: String!
     }
 
     type InvestmentHistory {

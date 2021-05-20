@@ -284,6 +284,13 @@ const resolvers = {
                 }
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        CreditInvestment: async (_, { model }, { user }) => {
+            if (user && user.isAdmin) {
+                await InvestmentHistoryService.LogInvestment(model);
+                return "Operation completed!";
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     Investment: {
