@@ -288,7 +288,7 @@ const resolvers = {
         CreditInvestment: async (_, { model }, { user }) => {
             if (user && user.isAdmin) {
                 await InvestmentHistoryService.LogInvestment(model);
-                return "Operation completed!";
+                return { message: "Operation completed!", status: 200 };
             }
             return new AuthenticationError("Unauthorized access!");
         }
