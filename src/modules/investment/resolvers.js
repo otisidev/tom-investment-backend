@@ -288,7 +288,19 @@ const resolvers = {
         CreditInvestment: async (_, { model }, { user }) => {
             if (user && user.isAdmin) {
                 await InvestmentHistoryService.LogInvestment(model);
-                const result = InvestmentService.Credit(model.investment, model.amount);
+                const result = await InvestmentService.Credit(model.investment, model.amount);
+
+                const _user = await UserService.GetSingleUser(result.doc.user);
+                // send message
+                const message = `New Credit Alert. <br/>
+							<b> Amount: </b> $${Intl.NumberFormat("en-US").format(model.amount)} <br/>
+							<b> Narration: </b> ${model.reason}<br/>
+							<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(result.doc.investmentMade)}  <br/>
+							<b> Current Balance: </b> $${Intl.NumberFormat("en-US").format(result.doc.currentBalance)}  <br/>
+							<b> Date: </b> ${new Date().toDateString()} <br/>
+						`;
+                await mailing.SendEmailNotification(_user.doc.email, "Investment Balance Update!", message);
+
                 return result;
             }
             return new AuthenticationError("Unauthorized access!");
