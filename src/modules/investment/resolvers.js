@@ -1,5 +1,6 @@
 const { AuthenticationError, ApolloError } = require("apollo-server");
 const { InvestmentService } = require("../../service/investment.service");
+const { TopUpInvestmentService } = require("../../service/top-up.service");
 const { UserService } = require("../../service/user.service");
 const { InvestmentHistoryService } = require("../../service/investment-log.service");
 const { mailing } = require("../../service/mailing.service");
@@ -300,6 +301,25 @@ const resolvers = {
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 						`;
                 await mailing.SendEmailNotification(_user.doc.email, "Investment Balance Update!", message);
+
+                return result;
+            }
+            return new AuthenticationError("Unauthorized access!");
+        },
+        AdminInvestmentTopUp: async (_, { id, amount }, { user }) => {
+            if (user && user.isAdmin) {
+                const _investment = await InvestmentService.GetSingle(id);
+                const res = await TopUpInvestmentService.NewTopUp(amount, id, _investment.doc.user);
+                const _result = await TopUpInvestmentService.Approve(res.doc._id);
+
+                const _user = await UserService.GetSingleUser(res.doc.user);
+                // send message
+                const message = `New Investment Top-up. <br/>
+							<b> Amount: </b> $${Intl.NumberFormat("en-US").format(amount)} <br/>
+							<b> New Investment Made: </b> $${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
+							<b> Date: </b> ${new Date().toDateString()} <br/>
+						`;
+                await mailing.SendEmailNotification(_user.doc.email, "Investment Top-up!", message);
 
                 return result;
             }
