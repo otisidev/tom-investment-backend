@@ -309,17 +309,17 @@ const resolvers = {
         AdminInvestmentTopUp: async (_, { id, amount }, { user }) => {
             if (user && user.isAdmin) {
                 const _investment = await InvestmentService.GetSingle(id);
-                const res = await TopUpInvestmentService.NewTopUp(amount, id, _investment.doc.user);
+                const _user = _investment.doc.user;
+                const res = await TopUpInvestmentService.NewTopUp(amount, id, user._id);
                 const _result = await TopUpInvestmentService.Approve(res.doc._id);
 
-                const _user = await UserService.GetSingleUser(res.doc.user);
                 // send message
                 const message = `New Investment Top-up. <br/>
 							<b> Amount: </b> $${Intl.NumberFormat("en-US").format(amount)} <br/>
-							<b> New Investment Made: </b> $${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
+							<b> New Investment Balance: </b> $${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 						`;
-                await mailing.SendEmailNotification(_user.doc.email, "Investment Top-up!", message);
+                await mailing.SendEmailNotification(_user.email, "Investment Top-up!", message);
 
                 return result;
             }
