@@ -7,6 +7,7 @@ const { mailing } = require("../../service/mailing.service");
 const { ReferrerService } = require("../../service/referrer.service");
 const { calculatePayout } = require("../../../lib/percent");
 const moment = require("moment");
+const { PlanService } = require("../../service/plan.service");
 // const { NextOfKinService } = require("../../service/kin.service");
 
 const resolvers = {
@@ -312,7 +313,13 @@ const resolvers = {
                 const _user = _investment.doc.user;
                 const res = await TopUpInvestmentService.NewTopUp(amount, id, _user._id);
                 const _result = await TopUpInvestmentService.Approve(res.doc._id);
-
+                const planResult = await PlanService.GetPlanByAmount(
+                    Math.round(res.doc.amount + _investment.doc.investmentMade),
+                    _investment.doc.category
+                );
+                if (!planResult) return new ApolloError("investment plan not found!");
+                //update investment
+                await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult._id);
                 // send message
                 const message = `New Investment Top-up. <br/>
 							<b> Amount: </b> $${Intl.NumberFormat("en-US").format(amount)} <br/>
