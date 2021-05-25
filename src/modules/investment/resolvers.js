@@ -310,7 +310,7 @@ const resolvers = {
             if (user && user.isAdmin) {
                 const _investment = await InvestmentService.GetSingle(id);
                 const _user = _investment.doc.user;
-                const res = await TopUpInvestmentService.NewTopUp(amount, id, user._id);
+                const res = await TopUpInvestmentService.NewTopUp(amount, id, _user._id);
                 const _result = await TopUpInvestmentService.Approve(res.doc._id);
 
                 // send message
