@@ -314,12 +314,11 @@ const resolvers = {
                 const res = await TopUpInvestmentService.NewTopUp(amount, id, _user._id);
                 const _result = await TopUpInvestmentService.Approve(res.doc._id);
                 const planResult = await PlanService.GetPlanByAmount(
-                    Math.round(res.doc.amount + _investment.doc.investmentMade),
+                    Math.round(amount + _investment.doc.investmentMade),
                     _investment.doc.category
                 );
-                if (!planResult) return new ApolloError("investment plan not found!");
                 //update investment
-                await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult._id);
+                await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult?._id || _investment.doc.plan._id);
                 // send message
                 const message = `New Investment Top-up. <br/>
 							<b> Amount: </b> $${Intl.NumberFormat("en-US").format(amount)} <br/>
