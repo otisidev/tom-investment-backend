@@ -321,7 +321,7 @@ const resolvers = {
 						`;
                 await mailing.SendEmailNotification(_user.email, "Investment Top-up!", message);
 
-                return result;
+                return res;
             }
             return new AuthenticationError("Unauthorized access!");
         }
