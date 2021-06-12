@@ -119,7 +119,7 @@ const resolvers = {
 
                 // update to next
                 const message = `Your investment has been approved!. <br/>
-					<b> Amount: </b> £${investment.doc.investmentMade} <br/>
+					<b> Amount: </b> €${investment.doc.investmentMade} <br/>
 					<b> Plan: </b> ${investment.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> Payout are Mondays only.
@@ -152,7 +152,7 @@ const resolvers = {
                 const result = await InvestmentService.Decline(id);
                 const person = invest.doc.user;
                 const message = `Your investment has been declined!. <br/>
-					<b> Investment Made: </b> £${Intl.NumberFormat("en-US").format(invest.doc.investmentMade)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(invest.doc.investmentMade)} <br/>
 					<b> Plan: </b> ${invest.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} 
 				`;
@@ -220,8 +220,8 @@ const resolvers = {
                 });
 
                 const message = `New investment payout. <br/>
-							<b> Investment Made: </b> £${Intl.NumberFormat("en-US").format(investmentMade)} <br/>
-							<b> Payout: </b> £${Intl.NumberFormat("en-US").format(amount)}<br/>
+							<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(investmentMade)} <br/>
+							<b> Payout: </b> €${Intl.NumberFormat("en-US").format(amount)}<br/>
 							<b> Plan: </b> ${investment.doc.plan.title} <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 							<b> Next Payout Date: </b> Payout are Mondays only. 
@@ -241,7 +241,7 @@ const resolvers = {
                 const result = await InvestmentService.Reinvest(id, investment.doc.currentBalance, due.toDate());
                 const { email } = investment.doc.user;
                 const message = `Reinvestment Notification. <br/>
-					<b> Investment Made: </b> £${Intl.NumberFormat("en-US").format(result.doc.resultMade)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.resultMade)} <br/>
 					<b> Next Payout: </b> Payout are Mondays only. <br/>
 					<b> Plan: </b> ${result.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
@@ -262,8 +262,8 @@ const resolvers = {
             if (user) {
                 const result = await InvestmentService.CompoundInvestment(id, nextFund, user.id, payout);
                 const message = `Investment Compound Notification. <br/>
-					<b> Investment Made: </b> £${Intl.NumberFormat("en-US").format(result.doc.investmentMade)} <br/>
-					<b> Next Payout: </b> £${Intl.NumberFormat("en-US").format(payout)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.investmentMade)} <br/>
+					<b> Next Payout: </b> €${Intl.NumberFormat("en-US").format(payout)} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> ${new Date(nextFund).toDateString()} 
 				`;
@@ -295,10 +295,10 @@ const resolvers = {
                 const _user = await UserService.GetSingleUser(result.doc.user);
                 // send message
                 const message = `New Credit Alert. <br/>
-							<b> Amount: </b> £${Intl.NumberFormat("en-US").format(model.amount)} <br/>
+							<b> Amount: </b> €${Intl.NumberFormat("en-US").format(model.amount)} <br/>
 							<b> Narration: </b> ${model.reason}<br/>
-							<b> Investment Made: </b> £${Intl.NumberFormat("en-US").format(result.doc.investmentMade)}  <br/>
-							<b> Current Balance: </b> £${Intl.NumberFormat("en-US").format(result.doc.currentBalance)}  <br/>
+							<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.investmentMade)}  <br/>
+							<b> Current Balance: </b> €${Intl.NumberFormat("en-US").format(result.doc.currentBalance)}  <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 						`;
                 await mailing.SendEmailNotification(_user.doc.email, "Investment Balance Update!", message);
@@ -321,8 +321,8 @@ const resolvers = {
                 await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult?._id || _investment.doc.plan._id);
                 // send message
                 const message = `New Investment Top-up. <br/>
-							<b> Amount: </b> £${Intl.NumberFormat("en-US").format(amount)} <br/>
-							<b> New Investment Balance: </b> £${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
+							<b> Amount: </b> €${Intl.NumberFormat("en-US").format(amount)} <br/>
+							<b> New Investment Balance: </b> €${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 						`;
                 await mailing.SendEmailNotification(_user.email, "Investment Top-up!", message);
