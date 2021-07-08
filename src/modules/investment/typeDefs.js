@@ -66,13 +66,14 @@ const typeDefs = gql`
         "Credit user's investment"
         CreditInvestment(model: InvestmentLogInput!): SingleInvestmentResponse!
         "New investment top up"
-        AdminInvestmentTopUp(id: ID!, amount: Int!): SingleInvestmentResponse!
+        AdminInvestmentTopUp(id: ID!, amount: Int!, currency: String!): SingleInvestmentResponse!
     }
 
     input InvestmentLogInput {
         investment: ID!
         amount: Int!
         reason: String!
+        currency: String!
     }
 
     type InvestmentHistory {
