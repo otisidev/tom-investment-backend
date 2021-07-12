@@ -43,7 +43,7 @@ const typeDefs = gql`
             user: String
         ): InvestmentListResponse!
         GetInvestment(Id: ID!): SingleInvestmentResponse
-        GetInvestmentInformation("User email address" email: String!): InvestmentHistoryList!
+        GetInvestmentInformation("User email address" email: String!): InvestmentListResponse!
     }
 
     extend type Mutation {
@@ -202,7 +202,6 @@ const typeDefs = gql`
         last_fund_date: String
         compounded: InvestmentCompound
         walletAddress: String
-
         "Days to payout"
         days_to_payout: Int!
         "Weekly payout interval"
