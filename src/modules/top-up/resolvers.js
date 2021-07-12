@@ -53,6 +53,7 @@ const resolvers = {
         }
     },
     InvestmentTopUp: {
+        id: ({ _id }) => _id,
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
         investment: async ({ investment }, _, { dataSources }) => await dataSources.loaders.investmentLoader.load(investment.toString())
     }

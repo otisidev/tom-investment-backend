@@ -547,4 +547,39 @@ exports.InvestmentService = class InvestmentService {
         }
         return false;
     }
+
+    static async GetUserInvestmentsInformation(userId) {
+        if (isValid(userId)) {
+            const q = { user: userId, removed: false, approved: true, declined: false, paid: true, closed: false };
+            const pipeline = [
+                {
+                    $match: q
+                },
+                {
+                    $lookup: {
+                        from: "topupmodels",
+                        localField: "_id",
+                        foreignField: "investment",
+                        as: "topups"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "investmentlogs",
+                        localField: "_id",
+                        foreignField: "investment",
+                        as: "logs"
+                    }
+                }
+            ];
+
+            const result = await Model.aggregate(pipeline);
+
+            return {
+                docs: result,
+                status: 200,
+                message: "Completed"
+            };
+        }
+    }
 };

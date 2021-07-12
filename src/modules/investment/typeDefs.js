@@ -43,6 +43,7 @@ const typeDefs = gql`
             user: String
         ): InvestmentListResponse!
         GetInvestment(Id: ID!): SingleInvestmentResponse
+        GetInvestmentInformation("User email address" email: String!): InvestmentHistoryList!
     }
 
     extend type Mutation {
@@ -212,6 +213,10 @@ const typeDefs = gql`
         status: Boolean
         payout: String
         payoutDate: String
+    }
+
+    extend type Investment {
+        logs: [InvestmentHistory!]
     }
 `;
 

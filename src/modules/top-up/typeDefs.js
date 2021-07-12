@@ -42,6 +42,10 @@ const typeDefs = gql`
         created_at: String!
         approved: Boolean!
     }
+
+    extend type Investment {
+        topups: [InvestmentTopUp!]
+    }
 `;
 
 exports.typeDefs = typeDefs;
