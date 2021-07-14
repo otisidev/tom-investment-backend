@@ -343,6 +343,7 @@ const resolvers = {
         }
     },
     Investment: {
+        id: ({ _id }) => _id,
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
         investment_made: ({ investmentMade }) => investmentMade,
         date: ({ date }) => new Date(date).toISOString(),
@@ -362,7 +363,8 @@ const resolvers = {
         }
     },
     InvestmentHistory: {
-        date: ({ date }) => new Date(date).toISOString()
+        date: ({ date }) => new Date(date).toISOString(),
+        id: ({ _id }) => _id
     },
     InvestmentCompound: {
         payoutDate: ({ payoutDate }) => {

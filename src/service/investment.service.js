@@ -599,7 +599,7 @@ exports.InvestmentService = class InvestmentService {
                 }
             ];
 
-            const result = await Model.aggregate(pipeline);
+            const result = await Model.aggregate(pipeline).exec();
 
             return {
                 docs: result,
