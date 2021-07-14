@@ -298,11 +298,13 @@ const resolvers = {
             if (user && user.isAdmin) {
                 const { currency, ..._model } = model;
                 await InvestmentHistoryService.LogInvestment(_model);
-                const result = await InvestmentService.Credit(_model.investment, _model.amount);
+                const result = model.credit
+                    ? await InvestmentService.Credit(_model.investment, _model.amount)
+                    : await InvestmentService.Debit(_model.investment, _model.amount);
 
                 const _user = await UserService.GetSingleUser(result.doc.user);
                 // send message
-                const message = `New Credit Alert. <br/>
+                const message = `New ${model.credit ? "Credit" : "Debit"} Alert. <br/>
 							<b> Amount: </b> ${currency}${Intl.NumberFormat("en-US").format(model.amount)} <br/>
 							<b> Narration: </b> ${model.reason}<br/>
 							<b> Investment Made: </b> ${currency}${Intl.NumberFormat("en-US").format(result.doc.investmentMade)}  <br/>

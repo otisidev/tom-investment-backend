@@ -75,6 +75,7 @@ const typeDefs = gql`
         amount: Int!
         reason: String!
         currency: String!
+        credit: Boolean!
     }
 
     type InvestmentHistory {

@@ -266,6 +266,32 @@ exports.InvestmentService = class InvestmentService {
         }
         throw new Error("Investment or amount not valid!");
     }
+    static async Debit(investment, amount) {
+        if (isValid(investment) && amount) {
+            const q = {
+                removed: false,
+                approved: true,
+                closed: false,
+                declined: false,
+                _id: investment
+            };
+            const update = {
+                $inc: { currentBalance: -amount }
+            };
+            const cb = await Model.findOneAndUpdate(q, update, {
+                new: true
+            }).exec();
+            if (cb) {
+                //TODO: Update compound investment after payout await this.UpdateCompoundInvestment(investment); // update compound status
+                return {
+                    status: 200,
+                    message: "Completed successfully!",
+                    doc: cb
+                };
+            }
+        }
+        throw new Error("Investment or amount not valid!");
+    }
 
     static async GetSingle(investment) {
         if (isValid(investment)) {
