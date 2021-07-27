@@ -20,7 +20,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "User account created successfully",
-                    doc: cb,
+                    doc: cb
                 };
         } catch (error) {
             if (error.message.startsWith("E11000 duplicate key error collection:")) throw new Error("Bad data! User already exists.");
@@ -37,13 +37,13 @@ exports.UserService = class UserService {
             const query = { removed: false, _id: id };
             const update = { $set: { verified: true } };
             const op = await Model.findOneAndUpdate(query, update, {
-                new: true,
+                new: true
             }).exec();
             if (op)
                 return {
                     status: 200,
                     message: "User verified!",
-                    doc: op,
+                    doc: op
                 };
         }
         throw new Error("Unable to verify account! Record not found!");
@@ -57,14 +57,14 @@ exports.UserService = class UserService {
         if (email) {
             const query = {
                 removed: false,
-                $or: [{ email }, { phone: email }],
+                $or: [{ email }, { phone: email }]
             };
             const cb = await Model.findOne(query).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "User found!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -82,7 +82,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "User found!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -98,13 +98,13 @@ exports.UserService = class UserService {
             const query = { removed: false, email };
             const update = { $set: { passwordHash: NewPassword } };
             const op = await Model.findOneAndUpdate(query, update, {
-                new: true,
+                new: true
             }).exec();
             if (op)
                 return {
                     status: 200,
                     message: "Password Changed!",
-                    doc: op,
+                    doc: op
                 };
         }
         throw new Error("User not found!");
@@ -125,19 +125,19 @@ exports.UserService = class UserService {
         if (user) {
             query = {
                 ...query,
-                $or: [{ email: user }, { phone: user }, { firstname: user }, { lastname: user }],
+                $or: [{ email: user }, { phone: user }, { firstname: user }, { lastname: user }]
             };
         }
         const op = await Model.paginate(query, {
             page,
             limit,
-            sort: { created_at: -1 },
+            sort: { created_at: -1 }
         });
 
         return {
             status: 200,
             message: "Completed!",
-            ...op,
+            ...op
         };
     }
 
@@ -155,7 +155,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "Completed!",
-                    doc: op,
+                    doc: op
                 };
             }
         }
@@ -175,7 +175,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "Completed!",
-                    doc: op,
+                    doc: op
                 };
             }
         }
@@ -192,13 +192,13 @@ exports.UserService = class UserService {
             const q = { removed: false, _id: refererId };
             const update = { $addToSet: { referredUsers: user } };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "Operation completed successfully!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -214,13 +214,13 @@ exports.UserService = class UserService {
             const q = { removed: false, _id: user };
             const update = { $addToSet: { referredUsers: users } };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "Operation completed successfully!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -249,7 +249,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "User account removed successfully!",
-                    doc: { id, status: "Removed" },
+                    doc: { id, status: "Removed" }
                 };
         }
         throw new Error("Failed! User account not found.");
@@ -260,13 +260,30 @@ exports.UserService = class UserService {
             const q = { removed: false, _id: id };
             const update = { $set: { image } };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "User account updated successfully!",
-                    doc: cb,
+                    doc: cb
+                };
+        }
+        throw new Error("Failed! User account not found.");
+    }
+
+    static async UpdateReferrer(id, referrer) {
+        if (isValid(id) && image) {
+            const q = { removed: false, _id: id };
+            const update = { $set: { referrer } };
+            const cb = await Model.findOneAndUpdate(q, update, {
+                new: true
+            }).exec();
+            if (cb)
+                return {
+                    status: 200,
+                    message: "User referrer updated successfully!",
+                    doc: cb
                 };
         }
         throw new Error("Failed! User account not found.");
@@ -282,17 +299,17 @@ exports.UserService = class UserService {
                     phone: model.phone,
                     walletAddress: model.walletAddress,
                     address: model.address,
-                    gender: model.gender,
-                },
+                    gender: model.gender
+                }
             };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "Account updated successfully!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("Failed! User account not found.");
@@ -313,7 +330,7 @@ exports.UserService = class UserService {
 
     static async CountUsers() {
         const q = {
-            removed: false,
+            removed: false
         };
         return await Model.countDocuments(q).exec();
     }
@@ -337,8 +354,8 @@ exports.UserService = class UserService {
             const q = { removed: false, _id: id };
             const update = {
                 $set: {
-                    resetCode: code,
-                },
+                    resetCode: code
+                }
             };
             const cb = await Model.findOneAndUpdate(q, update).exec();
             if (cb) return code;
@@ -358,18 +375,19 @@ exports.UserService = class UserService {
                 const q = { removed: false, _id: id, resetCode: code };
                 const update = { $set: { email, resetCode: null } };
                 const cb = await Model.findOneAndUpdate(q, update, {
-                    new: true,
+                    new: true
                 }).exec();
                 if (cb)
                     return {
                         status: 200,
                         message: "Email address updated successfully!",
-                        doc: cb,
+                        doc: cb
                     };
             }
             throw new Error("User account not found!");
         } catch (error) {
-            if (error.message.startsWith("E11000 duplicate key error collection:")) throw new Error("Bad data! User with email address already exists.");
+            if (error.message.startsWith("E11000 duplicate key error collection:"))
+                throw new Error("Bad data! User with email address already exists.");
             throw error;
         }
     }
@@ -381,7 +399,7 @@ exports.UserService = class UserService {
     static async GetUserByNameEmailPhone(user) {
         if (user) {
             const q = {
-                $or: [{ $text: { $search: user } }, { phone: user }, { email: user }],
+                $or: [{ $text: { $search: user } }, { phone: user }, { email: user }]
             };
             const cb = await Model.find(q).exec();
             return cb;
@@ -391,13 +409,13 @@ exports.UserService = class UserService {
 
     static async GetYourReferrals(user) {
         if (isValid(user)) {
-            const _query = { removed: false, _id: user };
-            const result = await Model.findOne(_query).populate(["referredUsers"]).select(["referredUsers", "-_id"]).exec();
+            const _query = { removed: false, referrer: user };
+            const result = await Model.find(_query).exec();
             if (result)
                 return {
                     status: 200,
                     message: "Completed successfully!",
-                    docs: result.referredUsers,
+                    docs: result
                 };
         }
         throw new Error("User not found!");
@@ -415,7 +433,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "Found user!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -425,32 +443,32 @@ exports.UserService = class UserService {
         const _pipeline = [
             {
                 $match: {
-                    referrer: { $exists: true, $ne: null },
-                },
+                    referrer: { $exists: true, $ne: null }
+                }
             },
             {
                 $group: {
                     _id: "$referrer",
                     total: {
-                        $sum: 1,
+                        $sum: 1
                     },
                     users: {
-                        $push: "$_id",
-                    },
-                },
+                        $push: "$_id"
+                    }
+                }
             },
             {
                 $lookup: {
                     from: "users",
                     localField: "_id",
                     foreignField: "_id",
-                    as: "referrer",
-                },
+                    as: "referrer"
+                }
             },
             {
                 $unwind: {
-                    path: "$referrer",
-                },
+                    path: "$referrer"
+                }
             },
             {
                 $project: {
@@ -458,9 +476,9 @@ exports.UserService = class UserService {
                     listCount: { $size: "$referrer.referredUsers" },
                     total: 1,
                     users: 1,
-                    _id: 0,
-                },
-            },
+                    _id: 0
+                }
+            }
         ];
 
         const result = await Model.aggregate(_pipeline).exec();
@@ -481,7 +499,7 @@ exports.UserService = class UserService {
                 return {
                     status: 200,
                     message: "Updated next of kin successfully",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("User not found!");
@@ -495,7 +513,7 @@ exports.UserService = class UserService {
             if (cb)
                 return {
                     status: 200,
-                    message: "Verification code sent to your email address!",
+                    message: "Verification code sent to your email address!"
                 };
         }
         throw new Error("User not found!");
@@ -519,8 +537,11 @@ exports.UserService = class UserService {
             if (cb)
                 return {
                     status: 200,
-                    message: status !== false ? "Enabled Two factor authentication successfully" : "Disabled Two Factor authentication successfully",
-                    doc: cb,
+                    message:
+                        status !== false
+                            ? "Enabled Two factor authentication successfully"
+                            : "Disabled Two Factor authentication successfully",
+                    doc: cb
                 };
         }
         throw new Error("User not found!");

@@ -8,7 +8,8 @@ const typeDefs = gql`
     extend type Mutation {
         PayReferral(id: ID!): ReferralSingleResponse!
         FixReferral: String!
-    }
+        NewReferral(referrer: ID!, referred: ID!): ReferralSingleResponse!
+    }   
     type ReferralSingleResponse {
         status: Int!
         message: String!
