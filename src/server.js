@@ -38,7 +38,9 @@ const server = new ApolloServer({
         require("./modules/referral"),
         require("./modules/wallet"),
         require("./modules/category"),
-        require("./modules/contact-person")
+        require("./modules/contact-person"),
+        require("./modules/currency"),
+        require("./modules/top-up"),
     ]
 });
 

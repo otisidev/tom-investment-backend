@@ -43,7 +43,7 @@ const resolvers = {
                 return cb;
             }
             return new AuthenticationError("Unauthorized access!");
-        },
+        }
     },
     Mutation: {
         NewUserAccount: async (_, { model, referrer, option }, { ip }) => {
@@ -67,7 +67,7 @@ const resolvers = {
                         {
                             ...rest,
                             referralCode: code,
-                            referrer: refId ? refId : null,
+                            referrer: refId ? refId : null
                         },
                         _hashed
                     );
@@ -81,7 +81,7 @@ const resolvers = {
                         ...option,
                         user: cb.doc.id,
                         ip,
-                        attempt: 1,
+                        attempt: 1
                     });
                     // return return
                     return { ...cb, token };
@@ -129,7 +129,8 @@ const resolvers = {
             if (state) {
                 // check for 2 FA
                 if (user.doc.useTwoF && user.doc.resetCode !== null) {
-                    if (option.token !== user.doc.resetCode) return new AuthenticationError("Invalid verification code! Please enter the verification code sent to your inbox.");
+                    if (option.token !== user.doc.resetCode)
+                        return new AuthenticationError("Invalid verification code! Please enter the verification code sent to your inbox.");
                 } else if (user.doc.useTwoF && user.doc.resetCode === null) {
                     // generate token and send
                     const _token = generate(8);
@@ -148,7 +149,7 @@ const resolvers = {
                 return {
                     ...user,
                     message: "Authenticated successfully!",
-                    token,
+                    token
                 };
             }
             return new ApolloError("Incorrect email or password!", 404);
@@ -165,7 +166,7 @@ const resolvers = {
                 ip,
                 userAgent,
                 attempt: 1,
-                device: userAgent,
+                device: userAgent
             });
             // Updated Email
             const message = `You have successfully updated <br/>
@@ -177,7 +178,7 @@ const resolvers = {
             return {
                 ...user,
                 message: "Authenticated successfully!",
-                token,
+                token
             };
         },
         ResetPassword: async (_, { email }) => {
@@ -261,13 +262,14 @@ const resolvers = {
                 return await UserService.Update2FA(user.id, status);
             }
             return new AuthenticationError("Unauthorized access!");
-        },
+        }
     },
     User: {
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
         dob: ({ dob }) => new Date(dob).toISOString(),
         wallet_address: ({ walletAddress }) => walletAddress,
-        referred: async ({ referredUsers }, _, { dataSources }) => await dataSources.loaders.userLoader.loadMany(referredUsers.map((c) => c.toString())),
+        referred: async ({ referredUsers }, _, { dataSources }) =>
+            await dataSources.loaders.userLoader.loadMany(referredUsers.map((c) => c.toString())),
         referrer: async ({ referrer }, _, { dataSources }) => {
             if (referrer) return await dataSources.loaders.userLoader.load(referrer.toString());
             return null;
@@ -277,7 +279,8 @@ const resolvers = {
             if (nextOfKin) return await dataSources.loaders.kinLoader.load(nextOfKin.toString());
             return null;
         },
-    },
+        id: ({ _id }) => _id
+    }
 };
 const toDTO = (user) => ({
     id: user._id,
@@ -288,6 +291,6 @@ const toDTO = (user) => ({
     passwordHash: user.passwordHash,
     walletAddress: user.walletAddress,
     address: user.address,
-    isAdmin: user.admin,
+    isAdmin: user.admin
 });
 exports.resolvers = resolvers;

@@ -42,6 +42,8 @@ const typeDefs = gql`
             "User email address or phone"
             user: String
         ): InvestmentListResponse!
+        GetInvestment(Id: ID!): SingleInvestmentResponse
+        GetInvestmentInformation("User email address" email: String!): InvestmentListResponse!
     }
 
     extend type Mutation {
@@ -57,11 +59,23 @@ const typeDefs = gql`
         NewInvestmentByAdmin("New investment complete object" model: NewInvestmentInput!): SingleInvestmentResponse!
         Payout("Investment id" id: ID!, "Amount in bitcoin" btc: String!, "Receiver address" to: String!): SingleInvestmentResponse!
         "Reinvestment"
-        Reinvestment("investment id" id: ID!, "Payout" payout: Int!, "weeks to next payout" weeks: Int!): SingleInvestmentResponse
+        Reinvestment("investment id" id: ID!): SingleInvestmentResponse
         CompoundInvestment("investment id" id: ID!, "Payout" payout: String!, "next fund date" nextFund: String!): SingleInvestmentResponse!
         "Close active investment"
         CloseInvestment("investment id" id: ID!): DeletedResponse!
         FixInvestment: String!
+        "Credit user's investment"
+        CreditInvestment(model: InvestmentLogInput!): SingleInvestmentResponse!
+        "New investment top up"
+        AdminInvestmentTopUp(id: ID!, amount: Int!, currency: String!): SingleInvestmentResponse!
+    }
+
+    input InvestmentLogInput {
+        investment: ID!
+        amount: Int!
+        reason: String!
+        currency: String!
+        credit: Boolean!
     }
 
     type InvestmentHistory {
@@ -99,6 +113,7 @@ const typeDefs = gql`
         daysToPayout: Int!
         "Weekly payout interval"
         weeklyPayoutInterval: Int!
+        currency: ID!
     }
     "New Investment Object Template"
     input NewInvestmentInput {
@@ -188,7 +203,6 @@ const typeDefs = gql`
         last_fund_date: String
         compounded: InvestmentCompound
         walletAddress: String
-
         "Days to payout"
         days_to_payout: Int!
         "Weekly payout interval"
@@ -199,6 +213,10 @@ const typeDefs = gql`
         status: Boolean
         payout: String
         payoutDate: String
+    }
+
+    extend type Investment {
+        logs: [InvestmentHistory!]
     }
 `;
 

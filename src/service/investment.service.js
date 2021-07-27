@@ -173,8 +173,8 @@ exports.InvestmentService = class InvestmentService {
      * @param {number} payout total amount to increase the user's investment with
      * @param {number} weeks Number of days to the next fund date
      */
-    static async Reinvest(id, payout, weeks) {
-        if (isValid(id) && payout && weeks) {
+    static async Reinvest(id, amount, dueDate) {
+        if (isValid(id) && amount) {
             // query definition
             const q = {
                 removed: false,
@@ -183,15 +183,10 @@ exports.InvestmentService = class InvestmentService {
                 approved: true,
                 _id: id
             };
-            const investment = await this.GetSingle(id);
-            const dueDate = new Date(investment.doc.nextFund);
-            // New date for payout
-            dueDate.setHours(weeks * 7 * 24);
             // update statement
             const update = {
-                $set: { nextFund: dueDate },
-                $inc: { investmentMade: payout },
-                $currentDate: { lastFund: true }
+                $set: { nextFund: dueDate, currentBalance: 0 },
+                $inc: { investmentMade: amount }
             };
             const cb = await Model.findOneAndUpdate(q, update, {
                 new: true
@@ -245,6 +240,59 @@ exports.InvestmentService = class InvestmentService {
         throw new Error("Investment or amount not valid!");
     }
 
+    static async Credit(investment, amount) {
+        if (isValid(investment) && amount) {
+            const q = {
+                removed: false,
+                approved: true,
+                closed: false,
+                declined: false,
+                _id: investment
+            };
+            const update = {
+                $inc: { currentBalance: amount }
+            };
+            const cb = await Model.findOneAndUpdate(q, update, {
+                new: true
+            }).exec();
+            if (cb) {
+                //TODO: Update compound investment after payout await this.UpdateCompoundInvestment(investment); // update compound status
+                return {
+                    status: 200,
+                    message: "Completed successfully!",
+                    doc: cb
+                };
+            }
+        }
+        throw new Error("Investment or amount not valid!");
+    }
+    static async Debit(investment, amount) {
+        if (isValid(investment) && amount) {
+            const q = {
+                removed: false,
+                approved: true,
+                closed: false,
+                declined: false,
+                _id: investment
+            };
+            const update = {
+                $inc: { currentBalance: -amount }
+            };
+            const cb = await Model.findOneAndUpdate(q, update, {
+                new: true
+            }).exec();
+            if (cb) {
+                //TODO: Update compound investment after payout await this.UpdateCompoundInvestment(investment); // update compound status
+                return {
+                    status: 200,
+                    message: "Completed successfully!",
+                    doc: cb
+                };
+            }
+        }
+        throw new Error("Investment or amount not valid!");
+    }
+
     static async GetSingle(investment) {
         if (isValid(investment)) {
             const q = { removed: false, _id: investment };
@@ -268,32 +316,32 @@ exports.InvestmentService = class InvestmentService {
     static async GetPayableInvestments(page = 1, limit = 25, user = null) {
         const current = new Date();
 
-        if (current.getDay() === 1) {
-            let q = {
-                removed: false,
-                closed: false,
-                approved: true,
-                declined: false,
-                nextFund: { $lte: current }
-            };
-            if (user) {
-                q.user = { $in: user };
-            }
-            const opt = {
-                page,
-                limit,
-                sort: { nextFund: -1 },
-                populate: ["plan", "user"]
-            };
-            const cb = await Model.paginate(q, opt);
-            return {
-                ...cb,
-                status: 200,
-                message: "Completed!"
-            };
-        } else {
-            throw new Error("Investment payout is only on Mondays!");
+        // if (current.getDay() === 1) {
+        let q = {
+            removed: false,
+            closed: false,
+            approved: true,
+            declined: false,
+            nextFund: { $lte: current }
+        };
+        if (user) {
+            q.user = { $in: user };
         }
+        const opt = {
+            page,
+            limit,
+            sort: { nextFund: -1 },
+            populate: ["plan", "user"]
+        };
+        const cb = await Model.paginate(q, opt);
+        return {
+            ...cb,
+            status: 200,
+            message: "Completed!"
+        };
+        // } else {
+        //     throw new Error("Investment payout is only on Mondays!");
+        // }
     }
 
     static async GetInvestmentForApproval(page = 1, limit = 25) {
@@ -340,7 +388,7 @@ exports.InvestmentService = class InvestmentService {
      */
     static async GetMany(ids) {
         const q = { _id: { $in: ids } };
-        const result = await Model.find(q).exec();
+        const result = await Model.find(q).populate(["user"]).exec();
         return BatchDataLoader(ids, result);
     }
 
@@ -515,5 +563,49 @@ exports.InvestmentService = class InvestmentService {
             }
         ];
         return await Model.aggregate(pipeline).exec();
+    }
+    static async TopUp(id, amount, plan = null) {
+        if (isValid(id) && amount) {
+            const q = { removed: false, closed: false, _id: id };
+            let update = { $inc: { investmentMade: amount }, $set: { plan } };
+            const result = await Model.findOneAndUpdate(q, update).exec();
+            if (result) return true;
+        }
+        return false;
+    }
+
+    static async GetUserInvestmentsInformation(userId) {
+        if (isValid(userId)) {
+            const q = { user: userId, removed: false, approved: true, declined: false, paid: true, closed: false };
+            const pipeline = [
+                {
+                    $match: q
+                },
+                {
+                    $lookup: {
+                        from: "topupmodels",
+                        localField: "_id",
+                        foreignField: "investment",
+                        as: "topups"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "investmentlogs",
+                        localField: "_id",
+                        foreignField: "investment",
+                        as: "logs"
+                    }
+                }
+            ];
+
+            const result = await Model.aggregate(pipeline).exec();
+
+            return {
+                docs: result,
+                status: 200,
+                message: "Completed"
+            };
+        }
     }
 };

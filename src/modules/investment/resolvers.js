@@ -1,10 +1,13 @@
 const { AuthenticationError, ApolloError } = require("apollo-server");
 const { InvestmentService } = require("../../service/investment.service");
+const { TopUpInvestmentService } = require("../../service/top-up.service");
 const { UserService } = require("../../service/user.service");
 const { InvestmentHistoryService } = require("../../service/investment-log.service");
 const { mailing } = require("../../service/mailing.service");
 const { ReferrerService } = require("../../service/referrer.service");
 const { calculatePayout } = require("../../../lib/percent");
+const moment = require("moment");
+const { PlanService } = require("../../service/plan.service");
 // const { NextOfKinService } = require("../../service/kin.service");
 
 const resolvers = {
@@ -72,6 +75,20 @@ const resolvers = {
                 return result;
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        GetInvestment: async (_, { Id }, { user }) => {
+            if (user) {
+                const res = await InvestmentService.GetSingle(Id);
+                return res;
+            }
+            return new AuthenticationError("Unauthorized access!");
+        },
+        GetInvestmentInformation: async (_, { email }) => {
+            // get user
+            const user = await UserService.GetUserByEmail(email);
+            // get investment
+            const result = await InvestmentService.GetUserInvestmentsInformation(user.doc._id);
+            return result;
         }
     },
     Mutation: {
@@ -109,7 +126,7 @@ const resolvers = {
 
                 // update to next
                 const message = `Your investment has been approved!. <br/>
-					<b> Amount: </b> ${investment.doc.investmentMade} <br/>
+					<b> Amount: </b> €${investment.doc.investmentMade} <br/>
 					<b> Plan: </b> ${investment.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> Payout are Mondays only.
@@ -142,7 +159,7 @@ const resolvers = {
                 const result = await InvestmentService.Decline(id);
                 const person = invest.doc.user;
                 const message = `Your investment has been declined!. <br/>
-					<b> Investment Made: </b> ${Intl.NumberFormat("en-US").format(invest.doc.investmentMade)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(invest.doc.investmentMade)} <br/>
 					<b> Plan: </b> ${invest.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} 
 				`;
@@ -210,8 +227,8 @@ const resolvers = {
                 });
 
                 const message = `New investment payout. <br/>
-							<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(investmentMade)} <br/>
-							<b> Payout: </b> $${Intl.NumberFormat("en-US").format(amount)}<br/>
+							<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(investmentMade)} <br/>
+							<b> Payout: </b> €${Intl.NumberFormat("en-US").format(amount)}<br/>
 							<b> Plan: </b> ${investment.doc.plan.title} <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
 							<b> Next Payout Date: </b> Payout are Mondays only. 
@@ -224,17 +241,18 @@ const resolvers = {
             }
             return new AuthenticationError("Unauthorized access!");
         },
-        Reinvestment: async (_, { id, payout, weeks }, { user }) => {
+        Reinvestment: async (_, { id }, { user }) => {
             if (user) {
                 const investment = await InvestmentService.GetSingle(id);
-                const result = await InvestmentService.Reinvest(id, payout, weeks);
+                const due = moment(investment.doc.nextFund).add(7, "days");
+                const result = await InvestmentService.Reinvest(id, investment.doc.currentBalance, due.toDate());
                 const { email } = investment.doc.user;
                 const message = `Reinvestment Notification. <br/>
-					<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(investment.doc.investmentMade)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.resultMade)} <br/>
 					<b> Next Payout: </b> Payout are Mondays only. <br/>
-					<b> Plan: </b> ${investment.doc.plan.title} <br/>
+					<b> Plan: </b> ${result.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
-					<b> Next Payout Date: </b> ${new Date(investment.doc.nextFund).toDateString()} 
+					<b> Next Payout Date: </b> ${new Date(result.doc.nextFund).toDateString()} 
 				`;
                 await mailing.SendEmailNotification(email, "Reinvestment Notification!", message);
                 return result;
@@ -251,8 +269,8 @@ const resolvers = {
             if (user) {
                 const result = await InvestmentService.CompoundInvestment(id, nextFund, user.id, payout);
                 const message = `Investment Compound Notification. <br/>
-					<b> Investment Made: </b> $${Intl.NumberFormat("en-US").format(result.doc.investmentMade)} <br/>
-					<b> Next Payout: </b> $${Intl.NumberFormat("en-US").format(payout)} <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.investmentMade)} <br/>
+					<b> Next Payout: </b> €${Intl.NumberFormat("en-US").format(payout)} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> ${new Date(nextFund).toDateString()} 
 				`;
@@ -275,9 +293,57 @@ const resolvers = {
                 }
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        CreditInvestment: async (_, { model }, { user }) => {
+            if (user && user.isAdmin) {
+                const { currency, ..._model } = model;
+                await InvestmentHistoryService.LogInvestment(_model);
+                const result = model.credit
+                    ? await InvestmentService.Credit(_model.investment, _model.amount)
+                    : await InvestmentService.Debit(_model.investment, _model.amount);
+
+                const _user = await UserService.GetSingleUser(result.doc.user);
+                // send message
+                const message = `New ${model.credit ? "Credit" : "Debit"} Alert. <br/>
+							<b> Amount: </b> ${currency}${Intl.NumberFormat("en-US").format(model.amount)} <br/>
+							<b> Narration: </b> ${model.reason}<br/>
+							<b> Investment Made: </b> ${currency}${Intl.NumberFormat("en-US").format(result.doc.investmentMade)}  <br/>
+							<b> Current Balance: </b> ${currency}${Intl.NumberFormat("en-US").format(result.doc.currentBalance)}  <br/>
+							<b> Date: </b> ${new Date().toDateString()} <br/>
+						`;
+                await mailing.SendEmailNotification(_user.doc.email, "Investment Balance Update!", message);
+
+                return result;
+            }
+            return new AuthenticationError("Unauthorized access!");
+        },
+        AdminInvestmentTopUp: async (_, { id, amount, currency }, { user }) => {
+            if (user && user.isAdmin) {
+                const _investment = await InvestmentService.GetSingle(id);
+                const _user = _investment.doc.user;
+                const res = await TopUpInvestmentService.NewTopUp(amount, id, _user._id);
+                const _result = await TopUpInvestmentService.Approve(res.doc._id);
+                const planResult = await PlanService.GetPlanByAmount(
+                    Math.round(amount + _investment.doc.investmentMade),
+                    _investment.doc.category
+                );
+                //update investment
+                await InvestmentService.TopUp(res.doc.investment, res.doc.amount, planResult?._id || _investment.doc.plan._id);
+                // send message
+                const message = `New Investment Top-up. <br/>
+							<b> Amount: </b> ${currency}${Intl.NumberFormat("en-US").format(amount)} <br/>
+							<b> New Investment Balance: </b> ${currency}${Intl.NumberFormat("en-US").format(_result.doc.amount + _investment.doc.investmentMade)}  <br/>
+							<b> Date: </b> ${new Date().toDateString()} <br/>
+						`;
+                await mailing.SendEmailNotification(_user.email, "Investment Top-up!", message);
+
+                return res;
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     Investment: {
+        id: ({ _id }) => _id,
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
         investment_made: ({ investmentMade }) => investmentMade,
         date: ({ date }) => new Date(date).toISOString(),
@@ -297,7 +363,8 @@ const resolvers = {
         }
     },
     InvestmentHistory: {
-        date: ({ date }) => new Date(date).toISOString()
+        date: ({ date }) => new Date(date).toISOString(),
+        id: ({ _id }) => _id
     },
     InvestmentCompound: {
         payoutDate: ({ payoutDate }) => {
