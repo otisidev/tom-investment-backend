@@ -73,7 +73,7 @@ const resolvers = {
             return new AuthenticationError("Unauthorized access!");
         },
         NewReferral: async (_, { referrer, referred }, { user }) => {
-            if (user) {
+            if (user && user.admin) {
                 const person = await UserService.AddReferral(referred, referrer);
                 await UserService.UpdateReferrer(referred, referrer);
                 const newPerson = await UserService.GetSingleUser(referred);
@@ -81,9 +81,9 @@ const resolvers = {
                 if (investment) {
                     // get payable amount
                     const amount = calculatePayout(investment.investmentMade, dataSources.helpers.app.referral_bonus);
-                    
+
                     // create a new referral bonus payout
-                    const result = await ReferrerService.Create({
+                    await ReferrerService.Create({
                         amount,
                         referrer,
                         user: referred,
@@ -98,10 +98,8 @@ const resolvers = {
                     `;
                     // referrer
                     await mailing.SendEmailNotification(person.doc.email, "New Referral", message);
-
-                    return result;
                 }
-                return new ApolloError("No investment for this client.");
+                return { message: "Operation completed successfully!" };
             }
             return new AuthenticationError("Unauthorized access!");
         }
