@@ -72,7 +72,7 @@ const resolvers = {
             }
             return new AuthenticationError("Unauthorized access!");
         },
-        NewReferral: async (_, { referrer, referred }, { user }) => {
+        NewReferral: async (_, { referrer, referred }, { user, dataSources }) => {
             if (user && user.isAdmin) {
                 const person = await UserService.AddReferral(referred, referrer);
                 await UserService.UpdateReferrer(referred, referrer);
