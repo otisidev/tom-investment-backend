@@ -273,7 +273,7 @@ exports.UserService = class UserService {
     }
 
     static async UpdateReferrer(id, referrer) {
-        if (isValid(id) && image) {
+        if (isValid(id) && isValid(referrer)) {
             const q = { removed: false, _id: id };
             const update = { $set: { referrer } };
             const cb = await Model.findOneAndUpdate(q, update, {
