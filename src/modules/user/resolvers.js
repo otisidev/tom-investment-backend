@@ -54,6 +54,7 @@ const resolvers = {
                     // Create account
                     const { password, ...rest } = model;
                     let refId = "";
+                    let e = "";
                     // code
                     const code = generate(10);
                     const _hashed = await CoreService.EncryptPassword(password);
@@ -62,6 +63,7 @@ const resolvers = {
                     if (referrer) {
                         const _userRef = await UserService.GetUserByReferralCode(referrer);
                         refId = _userRef.doc._id;
+                        e = _userRef.doc.email;
                     }
                     const cb = await UserService.CreateUser(
                         {
@@ -71,7 +73,17 @@ const resolvers = {
                         },
                         _hashed
                     );
-                    if (Types.ObjectId.isValid(refId)) await UserService.AddReferral(cb.doc.id, refId);
+                    if (Types.ObjectId.isValid(refId)) {
+                        await UserService.AddReferral(cb.doc.id, refId);
+                        // send message
+                        const message = `You have added new referral:
+                            <br />
+                            <strong>Name:" " </strong> ${model.firstname} ${model.lastname}
+                            <strong>Email:" " </strong> ${model.email} 
+                `;
+                        // referrer
+                        await mailing.SendEmailNotification(e, "New Referral", message);
+                    }
                     // generate token
                     const token = CoreService.GenerateToken(toDTO(cb.doc));
                     // Send mail to user account
