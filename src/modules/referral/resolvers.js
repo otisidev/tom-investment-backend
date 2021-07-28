@@ -89,16 +89,15 @@ const resolvers = {
                         user: referred,
                         investment: investment.id
                     });
-
-                    // send message
-                    const message = `You have added new referral:
-                        <br />
-                        <strong>Name:" " </strong> ${newPerson.doc.firstname} ${newPerson.doc.lastname}
-                        <strong>Email:" " </strong> ${newPerson.doc.email} 
-                    `;
-                    // referrer
-                    await mailing.SendEmailNotification(person.doc.email, "New Referral", message);
                 }
+                // send message
+                const message = `You have added new referral:
+                    <br />
+                    <strong>Name:" " </strong> ${newPerson.doc.firstname} ${newPerson.doc.lastname}
+                    <strong>Email:" " </strong> ${newPerson.doc.email} 
+                `;
+                // referrer
+                await mailing.SendEmailNotification(person.doc.email, "New Referral", message);
                 return { message: "Operation completed successfully!" };
             }
             return new AuthenticationError("Unauthorized access!");
