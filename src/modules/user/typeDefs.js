@@ -161,6 +161,7 @@ const typeDefs = gql`
         referrer: User
         next_of_kin: NextOfKin
         useTwoF: Boolean
+        accountType: String!
 
     }
 
@@ -186,6 +187,7 @@ const typeDefs = gql`
         "User's password"
         password: String!
         image: String
+        accountType: String
     }
 
     "Next of kin object template"

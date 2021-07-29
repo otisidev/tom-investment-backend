@@ -12,7 +12,7 @@ const UserSchema = new Schema(
         walletAddress: {
             type: String,
             trim: true,
-            required: true,
+            required: true
         },
         address: { type: String, trim: true },
         gender: { type: String, trim: true, required: true },
@@ -24,57 +24,61 @@ const UserSchema = new Schema(
                 type: Schema.Types.ObjectId,
                 trim: true,
                 default: [],
-                ref: "Investment",
-            },
+                ref: "Investment"
+            }
         ],
         referredUsers: [
             {
                 type: Schema.Types.ObjectId,
                 trim: true,
                 default: [],
-                ref: "User",
-            },
+                ref: "User"
+            }
         ],
         referrer: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            default: null,
+            default: null
         },
         nextOfKin: {
             type: Schema.Types.ObjectId,
             ref: "NextKin",
-            default: null,
+            default: null
         },
         admin: {
             type: Boolean,
-            default: false,
+            default: false
         },
         resetCode: {
             type: String,
             trim: true,
-            default: null,
+            default: null
         },
         referralCode: {
             type: String,
             trim: true,
             required: true,
-            unique: true,
+            unique: true
         },
         image: {
             type: String,
             trim: true,
-            default: null,
+            default: null
         },
         useTwoF: {
             type: Boolean,
-            default: false,
+            default: false
         },
+        accountType: {
+            type: String,
+            default: "Weekly Payout"
+        }
     },
     {
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
         toJSON: {
-            virtual: true,
-        },
+            virtual: true
+        }
     }
 );
 UserSchema.virtual("id").get(function () {
