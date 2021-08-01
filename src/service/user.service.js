@@ -546,4 +546,14 @@ exports.UserService = class UserService {
         }
         throw new Error("User not found!");
     }
+
+    static async ChangeAccountType(id, _type) {
+        if (isValid(id) && _type) {
+            const q = { removed: false, _id: id };
+            const u = { $set: { accountType: _type } };
+            const cb = await Model.findOneAndUpdate(q, u).exec();
+            if (cb) return { status: 200, message: "Updated successfully!", data: cb };
+        }
+        throw new Error("User not found!");
+    }
 };

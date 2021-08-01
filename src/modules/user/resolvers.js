@@ -274,6 +274,12 @@ const resolvers = {
                 return await UserService.Update2FA(user.id, status);
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        ChangeAccountType: async (_, { id, newType }, { user }) => {
+            if (user) {
+                return await UserService.ChangeAccountType(id, newType);
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     User: {
