@@ -8,7 +8,16 @@ const typeDefs = gql`
         "Gets a single user's account using their email address"
         GetUserByEmail("user email address" email: String!): UserSingleResponse!
         "Gets list of User"
-        GetUsers("Page number" page: Int, "maximum record per request" limit: Int, "user's nationality" nationality: ID, "user's email or phone number" user: String): UserListResponse!
+        GetUsers(
+            "Page number"
+            page: Int
+            "maximum record per request"
+            limit: Int
+            "user's nationality"
+            nationality: ID
+            "user's email or phone number"
+            user: String
+        ): UserListResponse!
         "Count all user in the system"
         CountUsers: Int!
         CountReferral: Int!
@@ -17,7 +26,14 @@ const typeDefs = gql`
 
     extend type Mutation {
         "Creates new room passing the room and User's name"
-        NewUserAccount("New user account object template" model: UserInput!, "option" option: OptionInput!, "id of the referrer" referrer: String): LoginResponse!
+        NewUserAccount(
+            "New user account object template"
+            model: UserInput!
+            "option"
+            option: OptionInput!
+            "id of the referrer"
+            referrer: String
+        ): LoginResponse!
         "Email/ account verification"
         VerifyAccount("User id " id: ID!): LoginResponse!
         UpdateProfile("image path" path: String!): UserSingleResponse!
@@ -46,6 +62,7 @@ const typeDefs = gql`
 
         "Update 2 factor authentication"
         Update2FA(status: Boolean!): UserSingleResponse!
+        ChangeAccountType(id: ID!, newType: String!): UserSingleResponse!
     }
     input UserUpdateInput {
         "user firstname"
@@ -162,7 +179,6 @@ const typeDefs = gql`
         next_of_kin: NextOfKin
         useTwoF: Boolean
         accountType: String!
-
     }
 
     input UserInput {
