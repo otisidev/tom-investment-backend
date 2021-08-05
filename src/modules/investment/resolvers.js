@@ -129,7 +129,7 @@ const resolvers = {
 					<b> Amount: </b> €${investment.doc.investmentMade} <br/>
 					<b> Plan: </b> ${investment.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
-					<b> Next Payout Date: </b> Payout are Mondays only.
+					<b> Next Payout Date: </b> Payout are Fridays only.
 				`;
                 // Approve investment
                 const result = await InvestmentService.Approve(id, nextFund);
@@ -178,8 +178,10 @@ const resolvers = {
         },
         NewInvestmentByAdmin: async (_, { model }, { dataSources, user }) => {
             if (user && user.isAdmin) {
+              
                 const result = await InvestmentService.NewInvestment(model);
                 await UserService.UpdateInvestment(model.user, result.doc.id);
+
                 // update referral
                 if (model.approved && (await InvestmentService.IsFirstInvestment(model.user))) {
                     const referrer = await UserService.GetUserReferrer(model.user);
@@ -231,7 +233,7 @@ const resolvers = {
 							<b> Payout: </b> €${Intl.NumberFormat("en-US").format(amount)}<br/>
 							<b> Plan: </b> ${investment.doc.plan.title} <br/>
 							<b> Date: </b> ${new Date().toDateString()} <br/>
-							<b> Next Payout Date: </b> Payout are Mondays only. 
+							<b> Next Payout Date: </b> Payout are Fridays only. 
 						`;
                 await mailing.SendEmailNotification(investment.doc.user.email, "Investment Payout!", message);
 
@@ -248,8 +250,8 @@ const resolvers = {
                 const result = await InvestmentService.Reinvest(id, investment.doc.currentBalance, due.toDate());
                 const { email } = investment.doc.user;
                 const message = `Reinvestment Notification. <br/>
-					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.resultMade)} <br/>
-					<b> Next Payout: </b> Payout are Mondays only. <br/>
+					<b> Investment Made: </b> €${Intl.NumberFormat("en-US").format(result.doc.investmentMade)} <br/>
+					<b> Next Payout: </b> Payout are Fridays only. <br/>
 					<b> Plan: </b> ${result.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> ${new Date(result.doc.nextFund).toDateString()} 

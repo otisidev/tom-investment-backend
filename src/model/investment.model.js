@@ -62,6 +62,11 @@ const InvestmentScheme = new Schema(
             type: Schema.Types.ObjectId,
             default: null,
             ref: "Currency"
+        },
+        localCurrency: {
+            type: String,
+            trim: true,
+            default: ""
         }
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

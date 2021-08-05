@@ -13,7 +13,7 @@ exports.ReferrerService = class ReferrerService {
                 return {
                     status: 200,
                     message: "Completed successfully!",
-                    doc: cb,
+                    doc: cb
                 };
             }
         }
@@ -22,21 +22,21 @@ exports.ReferrerService = class ReferrerService {
     // get unpaid
     static async GetPayableReferrals(page = 1, limit = 25) {
         const current = new Date();
-        if (current.getDay() === 4) {
+        if (current.getDay() === 5) {
             const q = { paid: false };
             const opt = {
                 page,
                 limit,
-                sort: { created_at: -1 },
+                sort: { created_at: -1 }
             };
             const cb = await Model.paginate(q, opt);
             return {
                 ...cb,
                 status: 200,
-                message: "Completed",
+                message: "Completed"
             };
         }
-        throw new Error("Referral payout are only on Thursdays!");
+        throw new Error("Referral payout are only on Fridays!");
     }
     // pay
     static async Paid(id) {
@@ -44,13 +44,13 @@ exports.ReferrerService = class ReferrerService {
             const q = { paid: false, _id: id };
             const update = { $set: { paid: true } };
             const cb = await Model.findOneAndUpdate(q, update, {
-                new: true,
+                new: true
             }).exec();
             if (cb)
                 return {
                     status: 200,
                     message: "Record updated successfully!",
-                    doc: cb,
+                    doc: cb
                 };
         }
         throw new Error("Referral record not found!");
@@ -63,13 +63,13 @@ exports.ReferrerService = class ReferrerService {
             return {
                 status: 200,
                 message: "Completed!",
-                docs: cb,
+                docs: cb
             };
         }
         return {
             status: 404,
             message: "No Referral found!",
-            docs: [],
+            docs: []
         };
     }
 
