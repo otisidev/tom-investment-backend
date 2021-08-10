@@ -350,6 +350,7 @@ const resolvers = {
     Investment: {
         id: ({ _id }) => _id,
         created_at: ({ created_at }) => new Date(created_at).toISOString(),
+        expiration: ({ expiration }) => (expiration ? new Date(expiration).toISOString() : null),
         investment_made: ({ investmentMade }) => investmentMade,
         date: ({ date }) => new Date(date).toISOString(),
         days_to_payout: ({ daysToPayout }) => daysToPayout,
