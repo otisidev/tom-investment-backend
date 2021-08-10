@@ -130,9 +130,9 @@ const resolvers = {
                 const message = `Your investment has been approved!. <br/>
 					<b> Amount: </b> €${investment.doc.investmentMade} <br/>
 					<b> Plan: </b> ${investment.doc.plan.title} <br/>
-					<b> Date: </b> ${new Date().toDateString()} <br/>
-					<b> Next Payout Date: </b> Payout are Fridays only.
+					<b> Start Date: </b> ${new Date(investment.doc.created_at).toDateString()} <br/>
 					<b> Expiration Date: </b> ${expiration.toDate().toString()}
+					<b> Next Payout Date: </b> Payout are Fridays only.
 				`;
                 // Approve investment
                 const result = await InvestmentService.Approve(id, nextFund, expiration);
