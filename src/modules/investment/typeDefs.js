@@ -115,6 +115,7 @@ const typeDefs = gql`
         weeklyPayoutInterval: Int!
         currency: ID!
         localCurrency: String!
+        duration: Int!
     }
     "New Investment Object Template"
     input NewInvestmentInput {
@@ -137,6 +138,7 @@ const typeDefs = gql`
         weeklyPayoutInterval: Int!
         localCurrency: String!
         currency: ID!
+        duration: Int
     }
 
     type SingleInvestmentResponse {
@@ -211,6 +213,8 @@ const typeDefs = gql`
         "Weekly payout interval"
         weekly_payout_interval: Int!
         localCurrency: String
+        duration: Int
+        expiration: String
     }
 
     type InvestmentCompound {

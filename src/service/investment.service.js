@@ -37,8 +37,9 @@ exports.InvestmentService = class InvestmentService {
      * Approves an investment
      * @param {string} investment investment object
      * @param {string} nextFund next fund date
+     * @param {string} expiration expiration date
      */
-    static async Approve(investment, nextFund) {
+    static async Approve(investment, nextFund, expiration) {
         if (isValid(investment) && nextFund) {
             const query = {
                 removed: false,
@@ -48,7 +49,7 @@ exports.InvestmentService = class InvestmentService {
                 approved: false,
                 paid: true
             };
-            const update = { $set: { approved: true, nextFund } };
+            const update = { $set: { approved: true, nextFund, expiration } };
             const op = await Model.findOneAndUpdate(query, update, {
                 new: true
             })

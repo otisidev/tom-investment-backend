@@ -95,6 +95,7 @@ const resolvers = {
         NewInvestment: async (_, { model }, { user }) => {
             if (user) {
                 const userRes = await UserService.GetSingleUser(user.id);
+                const duration = moment().add(model.duration, "months");
                 if (!userRes.doc.image)
                     return new ApolloError("Bad data! You can not create an investment without updating your profile picture.", 400);
                 // const next = await NextOfKinService.HasNextOfKin(user.id);
@@ -123,6 +124,7 @@ const resolvers = {
                 const investment = await InvestmentService.GetSingle(id);
                 // const next = new Date();
                 const _user = investment.doc.user;
+                const expiration = moment().add(investment.doc.duration, "months");
 
                 // update to next
                 const message = `Your investment has been approved!. <br/>
@@ -130,9 +132,10 @@ const resolvers = {
 					<b> Plan: </b> ${investment.doc.plan.title} <br/>
 					<b> Date: </b> ${new Date().toDateString()} <br/>
 					<b> Next Payout Date: </b> Payout are Fridays only.
+					<b> Expiration Date: </b> ${expiration.toDate().toString()}
 				`;
                 // Approve investment
-                const result = await InvestmentService.Approve(id, nextFund);
+                const result = await InvestmentService.Approve(id, nextFund, expiration);
                 await mailing.SendEmailNotification(_user.email, "Investment Approval", message);
                 // check if first investment
                 if (await InvestmentService.IsFirstInvestment(_user.id)) {
@@ -178,8 +181,8 @@ const resolvers = {
         },
         NewInvestmentByAdmin: async (_, { model }, { dataSources, user }) => {
             if (user && user.isAdmin) {
-              
-                const result = await InvestmentService.NewInvestment(model);
+                const expiration = moment().add("months", model.duration);
+                const result = await InvestmentService.NewInvestment({ ...model, expiration });
                 await UserService.UpdateInvestment(model.user, result.doc.id);
 
                 // update referral
@@ -199,7 +202,7 @@ const resolvers = {
             }
             return new AuthenticationError("Unauthorized access!");
         },
-        Payout: async (_, { id, btc, to }, { user }) => {
+        Payout: async (_, { id }, { user }) => {
             if (user && user.isAdmin) {
                 // get a single investment
                 const investment = await InvestmentService.GetSingle(id);
