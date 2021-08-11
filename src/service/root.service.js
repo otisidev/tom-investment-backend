@@ -18,7 +18,7 @@ module.exports = {
     },
     helpers: {
         app: {
-            referral_bonus: 8
+            referral_bonus: 5
         },
         isWalletValid: isWalletValid
     }

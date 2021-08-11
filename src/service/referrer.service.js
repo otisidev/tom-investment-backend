@@ -21,22 +21,22 @@ exports.ReferrerService = class ReferrerService {
     }
     // get unpaid
     static async GetPayableReferrals(page = 1, limit = 25) {
-        const current = new Date();
-        if (current.getDay() === 5) {
-            const q = { paid: false };
-            const opt = {
-                page,
-                limit,
-                sort: { created_at: -1 }
-            };
-            const cb = await Model.paginate(q, opt);
-            return {
-                ...cb,
-                status: 200,
-                message: "Completed"
-            };
-        }
-        throw new Error("Referral payout are only on Fridays!");
+        // const current = new Date();
+        // if (current.getDay() === 5) {
+        const q = { paid: false };
+        const opt = {
+            page,
+            limit,
+            sort: { created_at: -1 }
+        };
+        const cb = await Model.paginate(q, opt);
+        return {
+            ...cb,
+            status: 200,
+            message: "Completed"
+        };
+        // }
+        // throw new Error("Referral payout are only on Fridays!");
     }
     // pay
     static async Paid(id) {
