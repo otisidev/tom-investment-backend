@@ -630,4 +630,19 @@ exports.InvestmentService = class InvestmentService {
             };
         throw new Error("investment not found");
     }
+
+    static async ChangePlan(id, plan) {
+        if (isValid(id) && isValid(plan)) {
+            const q = { removed: false, _id: id, closed: false };
+            const u = { $set: { plan } };
+            const cb = await Model.findOneAndUpdate(q, u).exec();
+            if (cb)
+                return {
+                    message: "Plan updated successfully.",
+                    status: 200,
+                    doc: cb
+                };
+        }
+        throw new Error("investment not found");
+    }
 };
