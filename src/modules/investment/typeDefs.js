@@ -68,6 +68,8 @@ const typeDefs = gql`
         CreditInvestment(model: InvestmentLogInput!): SingleInvestmentResponse!
         "New investment top up"
         AdminInvestmentTopUp(id: ID!, amount: Int!, currency: String!): SingleInvestmentResponse!
+        "Update investment duration"
+        UpdateInvestmentDuration(id: ID!, duration: Int!): SingleInvestmentResponse!
     }
 
     input InvestmentLogInput {

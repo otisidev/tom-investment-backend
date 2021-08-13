@@ -345,6 +345,13 @@ const resolvers = {
                 return res;
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        UpdateInvestmentDuration: async (_, { id, duration }, { user }) => {
+            if (user && user.isAdmin) {
+                const res = await InvestmentService.UpdateInvestmentDuration(id, duration);
+                return res;
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     Investment: {

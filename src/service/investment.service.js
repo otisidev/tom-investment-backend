@@ -1,6 +1,7 @@
 const { InvestmentModel } = require("../model/investment.model");
 const { Types } = require("mongoose");
 const { BatchDataLoader } = require("../../lib/batch-entity");
+const moment = require("moment");
 
 const Model = InvestmentModel;
 const { isValid } = Types.ObjectId;
@@ -608,5 +609,25 @@ exports.InvestmentService = class InvestmentService {
                 message: "Completed"
             };
         }
+    }
+
+    static async UpdateInvestmentDuration(id, duration) {
+        // get investment
+        const investment = await this.GetSingle(id);
+        // new expiration date
+        const expiration = moment(investment.doc.date).add(duration, "days");
+        // query filter
+        const q = { removed: false, closed: false, _id: id };
+        // update statement
+        const u = { $set: { duration, expiration } };
+
+        const cb = await Model.findOneAndUpdate(q, u, { new: true });
+        if (cb)
+            return {
+                message: "Completed!",
+                status: 200,
+                doc: cb
+            };
+        throw new Error("investment not found");
     }
 };
