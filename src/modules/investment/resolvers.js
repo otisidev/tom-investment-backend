@@ -373,6 +373,10 @@ const resolvers = {
         last_fund_date: ({ lastFund }) => {
             if (lastFund) return new Date(lastFund).toISOString();
             return null;
+        },
+        expired: ({ expiration }) => {
+            if (!expiration) return false;
+            return moment(expiration).isBefore(moment());
         }
     },
     InvestmentHistory: {

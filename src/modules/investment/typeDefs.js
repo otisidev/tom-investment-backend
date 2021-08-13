@@ -217,6 +217,7 @@ const typeDefs = gql`
         localCurrency: String
         duration: Int
         expiration: String
+        expired: Boolean!
     }
 
     type InvestmentCompound {
