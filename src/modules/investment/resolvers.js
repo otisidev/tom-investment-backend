@@ -181,7 +181,7 @@ const resolvers = {
         },
         NewInvestmentByAdmin: async (_, { model }, { dataSources, user }) => {
             if (user && user.isAdmin) {
-                const expiration = moment(moment(model.date)).add("months", model.duration);
+                const expiration = moment(moment(model.date)).add(model.duration, "months");
                 const result = await InvestmentService.NewInvestment({ ...model, expiration });
                 await UserService.UpdateInvestment(model.user, result.doc.id);
 
