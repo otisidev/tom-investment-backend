@@ -615,7 +615,7 @@ exports.InvestmentService = class InvestmentService {
         // get investment
         const investment = await this.GetSingle(id);
         // new expiration date
-        const expiration = moment(investment.doc.date).add(duration, "days");
+        const expiration = moment(investment.doc.date).add(duration, "months");
         // query filter
         const q = { removed: false, closed: false, _id: id };
         // update statement
