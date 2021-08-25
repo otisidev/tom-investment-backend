@@ -63,6 +63,8 @@ const typeDefs = gql`
         "Update 2 factor authentication"
         Update2FA(status: Boolean!): UserSingleResponse!
         ChangeAccountType(id: ID!, newType: String!): UserSingleResponse!
+        "Admin update account"
+        AdminAccountUpdate("user object id" id: ID!, model: AdminUserUpdateInput!): UserSingleResponse!
     }
     input UserUpdateInput {
         "user firstname"
@@ -78,6 +80,26 @@ const typeDefs = gql`
         "bitcoin private key"
         gender: String
     }
+
+    input AdminUserUpdateInput {
+        "user firstname"
+        firstname: String!
+        "user's lastname"
+        lastname: String!
+        "phone number"
+        phone: String!
+        "bitcoin wallet address"
+        walletAddress: String!
+        "Contact address"
+        dob: String!
+        "bitcoin private key"
+        gender: String!
+        "Country"
+        nationality: String!
+        "Email address"
+        email: String!
+    }
+
     "Option identity template"
     input OptionInput {
         "Device name"

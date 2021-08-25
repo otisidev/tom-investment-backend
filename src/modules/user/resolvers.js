@@ -280,6 +280,12 @@ const resolvers = {
                 return await UserService.ChangeAccountType(id, newType);
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        AdminAccountUpdate: async (_, { id, model }, { user }) => {
+            if (user && user.isAdmin) {
+                return await UserService.AdminUpdateAccount(id, model);
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     User: {

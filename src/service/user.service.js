@@ -556,4 +556,32 @@ exports.UserService = class UserService {
         }
         throw new Error("User not found!");
     }
+
+    static async AdminUpdateAccount(id, model) {
+        if (isValid(id) && model) {
+            const q = { removed: false, _id: id };
+            const update = {
+                $set: {
+                    firstname: model.firstname,
+                    lastname: model.lastname,
+                    phone: model.phone,
+                    walletAddress: model.walletAddress,
+                    dob: model.dob,
+                    gender: model.gender,
+                    nationality: model.nationality,
+                    email: model.email
+                }
+            };
+            const cb = await Model.findOneAndUpdate(q, update, {
+                new: true
+            }).exec();
+            if (cb)
+                return {
+                    status: 200,
+                    message: "Account updated successfully!",
+                    doc: cb
+                };
+        }
+        throw new Error("Failed! User account not found.");
+    }
 };
