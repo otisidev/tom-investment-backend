@@ -569,7 +569,8 @@ exports.UserService = class UserService {
                     dob: model.dob,
                     gender: model.gender,
                     nationality: model.nationality,
-                    email: model.email
+                    email: model.email,
+                    accountType: model.accountType
                 }
             };
             const cb = await Model.findOneAndUpdate(q, update, {

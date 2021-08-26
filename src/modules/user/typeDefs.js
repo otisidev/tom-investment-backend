@@ -98,6 +98,8 @@ const typeDefs = gql`
         nationality: String!
         "Email address"
         email: String!
+        "Account type"
+        accountType: String!
     }
 
     "Option identity template"
