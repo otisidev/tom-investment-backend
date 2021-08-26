@@ -98,8 +98,8 @@ const typeDefs = gql`
         nationality: String!
         "Email address"
         email: String!
-        "Account type"
-        accountType: String!
+        "Duration"
+        duration: String!
     }
 
     "Option identity template"
@@ -201,8 +201,11 @@ const typeDefs = gql`
         name: String!
         referrer: User
         next_of_kin: NextOfKin
+        "Use 2 factor authentication"
         useTwoF: Boolean
         accountType: String!
+        "Duration"
+        duration: String!
     }
 
     input UserInput {
@@ -226,8 +229,12 @@ const typeDefs = gql`
         dob: String!
         "User's password"
         password: String!
+        "Image"
         image: String
+        "Account type"
         accountType: String
+        "Duration"
+        duration: String
     }
 
     "Next of kin object template"

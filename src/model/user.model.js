@@ -72,6 +72,10 @@ const UserSchema = new Schema(
         accountType: {
             type: String,
             default: "Weekly Payout"
+        },
+        duration: {
+            type: String,
+            default: "1 Year"
         }
     },
     {
