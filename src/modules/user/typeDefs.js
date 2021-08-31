@@ -23,7 +23,7 @@ const typeDefs = gql`
         CountReferral: Int!
         GetYourReferrals: UserListResponse!
     }
-
+clea
     extend type Mutation {
         "Creates new room passing the room and User's name"
         NewUserAccount(

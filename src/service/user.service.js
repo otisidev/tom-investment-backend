@@ -513,7 +513,8 @@ exports.UserService = class UserService {
             if (cb)
                 return {
                     status: 200,
-                    message: "Verification code sent to your email address!"
+                    message: "Verification code sent to your email address!",
+                    doc: null
                 };
         }
         throw new Error("User not found!");
