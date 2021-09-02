@@ -150,7 +150,7 @@ const resolvers = {
                     // Send email
                     const message = `Verification code for login: <br/> <h4>${_token}</h4>`;
                     await mailing.SendEmailNotification(email, "Account verification code", message);
-                    return _result;
+                    return new Authenticated(_result.message);
                 }
                 // generate token
                 const token = CoreService.GenerateToken(toDTO(user.doc));
