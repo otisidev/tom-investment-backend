@@ -142,7 +142,7 @@ const resolvers = {
                 // check for 2 FA
                 if (user.doc.useTwoF && user.doc.resetCode !== null) {
                     if (option.token !== user.doc.resetCode)
-                        return new AuthenticationError("Invalid verification code! Please enter the verification code sent to your inbox.");
+                        return new AuthenticationError("Verification code! Please enter the verification code sent to your inbox.");
                 } else if (user.doc.useTwoF && user.doc.resetCode === null) {
                     // generate token and send
                     const _token = generate(8);

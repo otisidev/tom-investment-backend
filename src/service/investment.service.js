@@ -318,33 +318,34 @@ exports.InvestmentService = class InvestmentService {
     static async GetPayableInvestments(page = 1, limit = 25, user = null) {
         const current = new Date();
 
-        if (current.getDay() === 5) {
-            let q = {
-                removed: false,
-                closed: false,
-                approved: true,
-                declined: false,
-                nextFund: { $lte: current }
-            };
-            if (user) {
-                q.user = { $in: user };
-            }
-            const opt = {
-                page,
-                limit,
-                sort: { nextFund: -1 },
-                populate: ["plan", "user"]
-            };
-            const cb = await Model.paginate(q, opt);
-            return {
-                ...cb,
-                status: 200,
-                message: "Completed!"
-            };
-        } else {
-            throw new Error("Investment payout is only on Friday!");
+        // if (current.getDay() === 5) {
+        let q = {
+            removed: false,
+            closed: false,
+            approved: true,
+            declined: false,
+            nextFund: { $lte: current }
+        };
+        if (user) {
+            q.user = { $in: user };
         }
+        const opt = {
+            page,
+            limit,
+            sort: { nextFund: -1 },
+            populate: ["plan", "user"]
+        };
+        const cb = await Model.paginate(q, opt);
+        return {
+            ...cb,
+            status: 200,
+            message: "Completed!"
+        };
     }
+    //  else {
+    //     throw new Error("Investment payout is only on Friday!");
+    // }
+    // }
 
     static async GetInvestmentForApproval(page = 1, limit = 25) {
         const q = {
