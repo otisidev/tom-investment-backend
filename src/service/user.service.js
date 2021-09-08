@@ -399,7 +399,7 @@ exports.UserService = class UserService {
     static async GetUserByNameEmailPhone(user) {
         if (user) {
             const q = {
-                $or: [{ $text: { $search: user } }, { phone: user }, { email: user }]
+                $text: { $search: user }
             };
             const cb = await Model.find(q).exec();
             return cb;
@@ -513,7 +513,7 @@ exports.UserService = class UserService {
             if (cb)
                 return {
                     status: 200,
-                    message: "Verification code sent to your email address!",
+                    message: "Verification code sent to your email address!"
                 };
         }
         throw new Error("User not found!");
