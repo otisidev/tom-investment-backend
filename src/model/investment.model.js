@@ -69,7 +69,8 @@ const InvestmentScheme = new Schema(
             default: ""
         },
         duration: { type: Number, default: 12 },
-        expiration: { type: Date, default: null }
+        expiration: { type: Date, default: null },
+        investmentType: { type: String, default: null }
     },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

@@ -119,6 +119,7 @@ const typeDefs = gql`
         currency: ID!
         localCurrency: String!
         duration: Int!
+        investmentType: String!
     }
     "New Investment Object Template"
     input NewInvestmentInput {
@@ -142,6 +143,7 @@ const typeDefs = gql`
         localCurrency: String!
         currency: ID!
         duration: Int
+        investmentType: String!
     }
 
     type SingleInvestmentResponse {
@@ -219,6 +221,7 @@ const typeDefs = gql`
         duration: Int
         expiration: String
         expired: Boolean!
+        investmentType: String
     }
 
     type InvestmentCompound {
