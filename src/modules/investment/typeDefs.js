@@ -69,7 +69,7 @@ const typeDefs = gql`
         "New investment top up"
         AdminInvestmentTopUp(id: ID!, amount: Int!, currency: String!): SingleInvestmentResponse!
         "Update investment duration"
-        UpdateInvestmentDuration(id: ID!, duration: Int!): SingleInvestmentResponse!
+        UpdateInvestmentDuration(id: ID!, duration: Int!, investmentType: String): SingleInvestmentResponse!
         UpdateInvestmentPlan(id: ID!, plan: ID!): SingleInvestmentResponse!
     }
 

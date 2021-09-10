@@ -612,7 +612,7 @@ exports.InvestmentService = class InvestmentService {
         }
     }
 
-    static async UpdateInvestmentDuration(id, duration) {
+    static async UpdateInvestmentDuration(id, duration, type) {
         // get investment
         const investment = await this.GetSingle(id);
         // new expiration date
@@ -620,7 +620,7 @@ exports.InvestmentService = class InvestmentService {
         // query filter
         const q = { removed: false, closed: false, _id: id };
         // update statement
-        const u = { $set: { duration, expiration } };
+        const u = { $set: { duration, expiration, investmentType: type } };
 
         const cb = await Model.findOneAndUpdate(q, u, { new: true });
         if (cb)
