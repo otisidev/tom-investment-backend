@@ -79,6 +79,8 @@ const typeDefs = gql`
         address: String!
         "bitcoin private key"
         gender: String
+        "Wallet name"
+        walletName: String
     }
 
     input AdminUserUpdateInput {
@@ -206,6 +208,8 @@ const typeDefs = gql`
         accountType: String!
         "Duration"
         duration: String!
+        "Wallet Name"
+        walletName: String
     }
 
     input UserInput {
@@ -235,6 +239,8 @@ const typeDefs = gql`
         accountType: String
         "Duration"
         duration: String
+        "Wallet name"
+        walletName: String!
     }
 
     "Next of kin object template"

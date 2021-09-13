@@ -76,7 +76,8 @@ const UserSchema = new Schema(
         duration: {
             type: String,
             default: "1 Year"
-        }
+        },
+        walletName: { type: String, default: null }
     },
     {
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
