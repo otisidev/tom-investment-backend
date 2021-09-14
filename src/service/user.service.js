@@ -571,7 +571,8 @@ exports.UserService = class UserService {
                     gender: model.gender,
                     nationality: model.nationality,
                     email: model.email,
-                    duration: model.duration
+                    duration: model.duration,
+                    walletName: model.walletName
                 }
             };
             const cb = await Model.findOneAndUpdate(q, update, {

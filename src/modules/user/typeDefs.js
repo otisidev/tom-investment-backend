@@ -102,6 +102,7 @@ const typeDefs = gql`
         email: String!
         "Duration"
         duration: String!
+        walletName: String
     }
 
     "Option identity template"
