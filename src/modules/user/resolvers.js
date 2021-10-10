@@ -146,11 +146,11 @@ const resolvers = {
                 } else if (user.doc.useTwoF && user.doc.resetCode === null) {
                     // generate token and send
                     const _token = generate(8);
-                    const _result = await UserService.RequestForLogin(email, _token);
+                    await UserService.RequestForLogin(email, _token);
                     // Send email
                     const message = `Verification code for login: <br/> <h4>${_token}</h4>`;
                     await mailing.SendEmailNotification(email, "Account verification code", message);
-                    return new AuthenticationError(_result.message);
+                    return new AuthenticationError("Verification code! Please enter the verification code sent to your inbox.");
                 }
                 // generate token
                 const token = CoreService.GenerateToken(toDTO(user.doc));
