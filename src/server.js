@@ -40,8 +40,13 @@ const server = new ApolloServer({
         require("./modules/category"),
         require("./modules/contact-person"),
         require("./modules/currency"),
-        require("./modules/top-up"),
-    ]
+        require("./modules/top-up")
+    ],
+    cors: {
+        origin: "*",
+        allowedHeaders: "*",
+        methods: "*"
+    }
 });
 
 // connect to database
@@ -66,6 +71,7 @@ connect()
 module.exports.handler = server.createHandler({
     cors: {
         origin: "*",
-        credentials: true
+        allowedHeaders: "*",
+        methods: "*"
     }
 });
