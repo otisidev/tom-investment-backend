@@ -43,6 +43,12 @@ const resolvers = {
                 return cb;
             }
             return new AuthenticationError("Unauthorized access!");
+        },
+        GetUserEmailAddresses: async (_, __, { user }) => {
+            if (user && user.isAdmin) {
+                return await UserService.GetEmails();
+            }
+            return new AuthenticationError("Unauthorized access!");
         }
     },
     Mutation: {
@@ -284,6 +290,14 @@ const resolvers = {
         AdminAccountUpdate: async (_, { id, model }, { user }) => {
             if (user && user.isAdmin) {
                 return await UserService.AdminUpdateAccount(id, model);
+            }
+            return new AuthenticationError("Unauthorized access!");
+        },
+        SendBulkEmail: async (_, { emails, messageContent, subject }, { user }) => {
+            if (user && user.isAdmin) {
+                const _emails = Array.from(emails);
+                const _first = _emails.shift();
+                return await mailing.SendBulkEmail(_first, subject, messageContent, _emails);
             }
             return new AuthenticationError("Unauthorized access!");
         }

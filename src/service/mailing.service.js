@@ -86,6 +86,31 @@ class MailService {
 
         throw new Error("Email not sent!");
     }
+
+    /**
+     * Sends message to user's email address
+     * @param {string} email email address
+     * @param {string} subject subject
+     * @param {string} body message content
+     * @param {string[]} other other receivers
+     */
+    static async SendBulkEmail(email, subject, body, others) {
+        const transport = nodemailer.createTransport(mailingOption);
+        const opt = {
+            to: email,
+            from: `${APP_NAME} <${USER}>`,
+            html: body,
+            subject: subject,
+            bcc: others
+        };
+        const res = await transport.sendMail(opt);
+        if (res.accepted)
+            return {
+                status: 200,
+                message: "Email sent successfully!"
+            };
+        throw new Error("Email not sent!");
+    }
 }
 
 function resetTemplate(ref, email, name, base_url, code) {

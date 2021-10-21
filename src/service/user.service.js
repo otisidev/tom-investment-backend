@@ -587,4 +587,11 @@ exports.UserService = class UserService {
         }
         throw new Error("Failed! User account not found.");
     }
+
+    static async GetEmails() {
+        const q = { removed: false };
+        const docs = await Model.find(q).select(["email"]).exec();
+        if (docs.length > 0) return Array.from(docs, ({ email }) => email);
+        return [];
+    }
 };

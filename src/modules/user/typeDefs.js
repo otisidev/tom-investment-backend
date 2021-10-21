@@ -22,6 +22,7 @@ const typeDefs = gql`
         CountUsers: Int!
         CountReferral: Int!
         GetYourReferrals: UserListResponse!
+        GetUserEmailAddresses: [String!]
     }
 
     extend type Mutation {
@@ -65,6 +66,8 @@ const typeDefs = gql`
         ChangeAccountType(id: ID!, newType: String!): UserSingleResponse!
         "Admin update account"
         AdminAccountUpdate("user object id" id: ID!, model: AdminUserUpdateInput!): UserSingleResponse!
+        "Send bulk email to user"
+        SendBulkEmail(emails: [String!]!, messageContent: String!, subject: String!): String!
     }
     input UserUpdateInput {
         "user firstname"
