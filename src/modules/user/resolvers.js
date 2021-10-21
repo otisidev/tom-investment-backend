@@ -297,7 +297,8 @@ const resolvers = {
             if (user && user.isAdmin) {
                 const _emails = Array.from(emails);
                 const _first = _emails.shift();
-                return await mailing.SendBulkEmail(_first, subject, messageContent, _emails);
+                const res = await mailing.SendBulkEmail(_first, subject, messageContent, _emails);
+                return res.message
             }
             return new AuthenticationError("Unauthorized access!");
         }
