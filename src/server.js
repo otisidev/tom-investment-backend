@@ -40,7 +40,8 @@ const server = new ApolloServer({
         require("./modules/category"),
         require("./modules/contact-person"),
         require("./modules/currency"),
-        require("./modules/top-up")
+        require("./modules/top-up"),
+        require("./modules/user-currency")
     ],
     cors: {
         origin: "*",
