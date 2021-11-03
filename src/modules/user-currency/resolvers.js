@@ -3,9 +3,9 @@ const { UserCurrencyService } = require("../../service/user-currency.service");
 
 const resolvers = {
     Query: {
-        GetUserCurrency: async (_, __, { user }) => {
+        GetUserCurrency: async (_, { id }, { user }) => {
             if (user) {
-                return await UserCurrencyService.GetCurrency(user.id);
+                return await UserCurrencyService.GetCurrency(id || user.id);
             }
             return new AuthenticationError("Unauthorized access!");
         }

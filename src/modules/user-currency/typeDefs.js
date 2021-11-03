@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
     extend type Query {
-        GetUserCurrency: UserCurrencyResponse!
+        GetUserCurrency(id: ID): UserCurrencyResponse!
     }
 
     extend type Mutation {
