@@ -6,7 +6,7 @@ const typeDefs = gql`
     }
 
     extend type Mutation {
-        SetUserCurrency(currency: String!): UserCurrencyResponse!
+        SetUserCurrency(currency: String!, id: ID): UserCurrencyResponse!
     }
 
     type UserCurrencyResponse {

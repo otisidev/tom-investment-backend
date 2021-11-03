@@ -11,9 +11,9 @@ const resolvers = {
         }
     },
     Mutation: {
-        SetUserCurrency: async (_, { currency }, { user }) => {
+        SetUserCurrency: async (_, { currency, id }, { user }) => {
             if (user) {
-                const result = await UserCurrencyService.UpdateCurrency(user.id, currency);
+                const result = await UserCurrencyService.UpdateCurrency(id || user.id, currency);
                 return result;
             }
             return new AuthenticationError("Unauthorized access!");
