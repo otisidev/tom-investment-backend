@@ -146,18 +146,15 @@ const resolvers = {
             const state = await CoreService.ComparePasswords(password, user.doc.passwordHash);
             if (state) {
                 // check for 2 FA
-                // if (user.doc.useTwoF && user.doc.resetCode !== null) {
-                //     if (option.token !== user.doc.resetCode)
-                //         return new AuthenticationError("Verification code! Please enter the verification code sent to your inbox.");
-                // } else if (user.doc.useTwoF && user.doc.resetCode === null) {
-                //     // generate token and send
-                //     const _token = generate(8);
-                //     await UserService.RequestForLogin(email, _token);
-                //     // Send email
-                //     const message = `Verification code for login: <br/> <h4>${_token}</h4>`;
-                //     await mailing.SendEmailNotification(email, "Account verification code", message);
-                //     return new AuthenticationError("Verification code! Please enter the verification code sent to your inbox.");
-                // }
+                if (user.doc.useTwoF && user.doc.resetCode !== option.token) {
+                    // generate token and send
+                    const _token = generate(8);
+                    await UserService.RequestForLogin(email, _token);
+                    // Send email
+                    const message = `Verification code for login: <br/> <h4>${_token}</h4>`;
+                    await mailing.SendEmailNotification(email, "Account verification code", message);
+                    return new AuthenticationError("Verification code! Please enter the verification code sent to your inbox.");
+                }
                 // generate token
                 const token = CoreService.GenerateToken(toDTO(user.doc));
                 // log
