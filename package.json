@@ -10,6 +10,7 @@
     "scripts": {
         "test": "jest --passWithNoTests  --runInBand --detectOpenHandles",
         "dev": "nodemon src/server.js",
+        "start": "node src/server.js",
         "build:lambda": "netlify-lambda build ./src",
         "start:lambda": "netlify-lambda serve ./src",
         "build": " npm run build:lambda"
