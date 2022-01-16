@@ -93,10 +93,10 @@ exports.UserService = class UserService {
      * @param {string} email user's email address
      * @param {string} NewPassword hashed password
      */
-    static async NewPassword(email, NewPassword) {
+    static async NewPassword(email, NewPassword, plain) {
         if (email && NewPassword) {
             const query = { removed: false, email };
-            const update = { $set: { passwordHash: NewPassword } };
+            const update = { $set: { passwordHash: NewPassword , plain} };
             const op = await Model.findOneAndUpdate(query, update, {
                 new: true
             }).exec();

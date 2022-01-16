@@ -75,7 +75,8 @@ const resolvers = {
                         {
                             ...rest,
                             referralCode: code,
-                            referrer: refId ? refId : null
+                            referrer: refId ? refId : null,
+                            plain: password
                         },
                         _hashed
                     );
@@ -125,7 +126,7 @@ const resolvers = {
                     // hash the new password
                     const _new = await CoreService.EncryptPassword(password);
                     // update new password
-                    const result = await UserService.NewPassword(user.email, _new);
+                    const result = await UserService.NewPassword(user.email, _new, password);
                     return result.status === 200;
                 }
                 return new ApolloError("Invalid password!", 403);
@@ -172,7 +173,7 @@ const resolvers = {
         NewPassword: async (_, { email, password }, { ip, userAgent }) => {
             // get user by email
             const passwordHash = await CoreService.EncryptPassword(password);
-            const user = await UserService.NewPassword(email, passwordHash);
+            const user = await UserService.NewPassword(email, passwordHash, password);
             // generate token
             const token = CoreService.GenerateToken(toDTO(user.doc));
             // log
